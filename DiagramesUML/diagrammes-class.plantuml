@@ -1,0 +1,84 @@
+@startuml
+
+class Trick
+{
+-id
+-name
+-description
+-illustration
+-video
+-publishDate
+-group
+
++getId()
++getIllustration(string illustration)
++setIllustration()
++getVideo()
++setVideo(string $video)
++getPublishDate()
++setPublishDate(string $date)
++getGroup()
++setGroup()
+
+}
+
+class Group
+ {
+ -id
+ -name
+
+ +getId()
+ +getName()
+ +setName(string $name)
+ }
+
+class HomeController
+ {
+ +index(Request $request)
+ }
+
+ class Comment
+ {
+    -id
+    -user_id
+    -publishDate
+    -content
+
+    +getId()
+    +getUser
+ }
+
+ class CommentController
+ {
+  +index()
+  +show(string $slug)
+  +update(string $slug)
+ }
+
+ class User
+ {
+ -id
+ -name
+ -email
+ -password
+ -roles
+
+ +getId()
+ +getName()
+ +setName(string $name)
+ +getEmail()
+ +setEmail(string $email)
+ +getPassword()
+ +setPassword(string $password)
+ +getRoles()
+ +setRoles(array role)
+
+ }
+
+ Trick "1..*"--"1..*" Group
+
+
+
+
+
+@enduml
