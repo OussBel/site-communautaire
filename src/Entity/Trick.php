@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TrickRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,7 +14,9 @@ class Trick
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+
+    #[ORM\Column(length: 255, unique:true)]
+    #[UniqueEntity('name')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -33,22 +33,11 @@ class Trick
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $users = null;
+    private ?Groupe $groupe = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?group $groups = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $publishedAt = null;
-
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
-    private Collection $comments;
-
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
-    }
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -115,68 +104,26 @@ class Trick
         return $this;
     }
 
-    public function getUsers(): ?User
+    public function getGroupe(): ?Groupe
     {
-        return $this->users;
+        return $this->groupe;
     }
 
-    public function setUsers(?User $users): static
+    public function setGroupe(?Groupe $groupe): static
     {
-        $this->users = $users;
+        $this->groupe = $groupe;
 
         return $this;
     }
 
-    public function getGroups(): ?group
+    public function getUser(): ?User
     {
-        return $this->groups;
+        return $this->user;
     }
 
-    public function setGroups(?group $groups): static
+    public function setUser(?User $user): static
     {
-        $this->groups = $groups;
-
-        return $this;
-    }
-
-    public function getPublishedAt(): ?\DateTimeInterface
-    {
-        return $this->publishedAt;
-    }
-
-    public function setPublishedAt(\DateTimeInterface $publishedAt): static
-    {
-        $this->publishedAt = $publishedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): static
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getTrick() === $this) {
-                $comment->setTrick(null);
-            }
-        }
+        $this->user = $user;
 
         return $this;
     }
