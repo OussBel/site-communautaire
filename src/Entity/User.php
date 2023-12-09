@@ -53,7 +53,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     public function __construct() {
         $this->tricks = new ArrayCollection();
         $this->createdAt = new \DateTime('now');
-        $this->isVerified = false;
         $this->tokenRegistrationLifeTime = (new \DateTime('now'))->add(new \DateInterval('P1D'));
     }
 

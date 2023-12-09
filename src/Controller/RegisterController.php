@@ -26,6 +26,10 @@ class RegisterController extends AbstractController
     ): Response
     {
 
+        if($this->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
 
@@ -35,7 +39,6 @@ class RegisterController extends AbstractController
 
             $tokenRegistration = $tokenGeneratorInterface->generateToken();
 
-            $user = $form->getData();
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
             $user->setTokenRegistration($tokenRegistration);
@@ -48,14 +51,13 @@ class RegisterController extends AbstractController
                 [
                     'user' => $user,
                     'token' => $tokenRegistration,
-                    'lifeTimeToken' => $user->getTokenRegistrationLifeTime()->format('d-m-Y-H-i-s')
+                    'lifeTimeToken' => $user->getTokenRegistrationLifeTime()->format('d/m/y à H\hi')
                 ]
             );
 
             $this->addFlash('success', 'Votre compte a été crée,
              merci de confirmer votre email');
 
-            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('register/index.html.twig', [
@@ -65,7 +67,7 @@ class RegisterController extends AbstractController
     }
 
     #[Route('/verify/{token}/{id<\d+>}', name: 'account_verify', methods: ['GET'])]
-    public function verify(string $token, User $user, EntityManagerInterface $entityManager): Response
+    public function verify( string $token, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($user->getTokenRegistration() !== $token) {
             throw new AccessDeniedException();

@@ -4,14 +4,23 @@
 
 {% block carousel %} {% endblock %}
 {% block body %}
+    <div class="container d-flex flex-wrap">
+        {% for trick in tricks %}
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    {% if trick.illustrations is null %}
+                        <img src="{{ asset('assets/empty.png') }}" class="card-img-top" alt="vide">
+                    {% else %}
+                        <img src="{{ asset('assets/' ~ trick.illustrations[0]) }}" class="card-img-top" alt="vide">
+                    {% endif %}
+                    <div class="card-body">
+                        <a href="{{ path('trick',{'slug':trick.slug }) }}" class="link-info border-0">{{ trick.name }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
-<div class="example-wrapper">
- {% include '_partials/_flash.html.twig' %}
 
 
-
-    <h1>Hello  ✅</h1>
-
-
-</div>
 {% endblock %}
