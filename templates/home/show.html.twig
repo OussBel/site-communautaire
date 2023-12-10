@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block carousel %} {% endblock %}
+{% block body %}
+
+   <div>
+      <img class="" src="{{ asset('assets/empty.png') }}">
+      <h3>{{ trick.name }}</h3>
+      <p>{{ trick.description }}</p>
+      <div>
+         <span>{{ trick.user.name }}</span>
+         <span>Groupe: {{ trick.groupe.name }}</span>
+      </div>
+   </div>
+
+
+
+{% endblock %}

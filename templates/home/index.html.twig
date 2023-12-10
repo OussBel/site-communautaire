@@ -5,6 +5,9 @@
 {% block carousel %} {% endblock %}
 {% block body %}
     <div class="container d-flex flex-wrap">
+        {% if tricks|length == 0 %}
+            <p>Pas de figures!</p>
+        {% else %}
         {% for trick in tricks %}
             <div class="col-3">
                 <div class="card" style="width: 18rem;">
@@ -14,13 +17,14 @@
                         <img src="{{ asset('assets/' ~ trick.illustrations[0]) }}" class="card-img-top" alt="vide">
                     {% endif %}
                     <div class="card-body">
-                        <a href="{{ path('trick',{'slug':trick.slug }) }}" class="link-info border-0">{{ trick.name }}</a>
+                        <a href="{{ path('app_trick',{'slug':trick.slug }) }}" class="link-info border-0">{{ trick.name }}</a>
                     </div>
                 </div>
             </div>
         {% endfor %}
-    </div>
 
+        {% endif %}
+    </div>
 
 
 {% endblock %}

@@ -15,7 +15,7 @@ class Trick
     private ?int $id = null;
 
 
-    #[ORM\Column(length: 255, unique:true)]
+    #[ORM\Column(length: 255, unique: true)]
     #[UniqueEntity('name')]
     private ?string $name = null;
 
@@ -38,6 +38,17 @@ class Trick
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $modifiedAt = null;
+
+
+    public function __construct() {
+        $this->createdAt = new \DateTime('now');
+    }
 
     public function getId(): ?int
     {
@@ -127,4 +138,30 @@ class Trick
 
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(?\DateTimeInterface $modifiedAt): static
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+
 }
