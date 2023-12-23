@@ -1,30 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
-
-{% block carousel %} {% endblock %}
+{% block title %}Snowtricks{% endblock %}
+{% block header %} {% endblock %}
 {% block body %}
-    <div class="container d-flex flex-wrap">
-        {% if tricks|length == 0 %}
-            <p>Pas de figures!</p>
-        {% else %}
-        {% for trick in tricks %}
-            <div class="col-3">
-                <div class="card" style="width: 18rem;">
-                    {% if trick.illustrations is null %}
-                        <img src="{{ asset('assets/empty.png') }}" class="card-img-top" alt="vide">
-                    {% else %}
-                        <img src="{{ asset('assets/' ~ trick.illustrations[0]) }}" class="card-img-top" alt="vide">
-                    {% endif %}
-                    <div class="card-body">
-                        <a href="{{ path('app_trick',{'slug':trick.slug }) }}" class="link-info border-0">{{ trick.name }}</a>
+    <div class="container">
+        <div class="row mt-100">
+            {% for trick in tricks %}
+                <div class="card col-lg-4 col-md-6 col-12 border-0">
+                    <img src="{{ asset('assets/empty.png') }}" class="card-img-top" alt="...">
+                    <div class="card-body text-center">
+                        <a href="{{ path('app_trick', {'slug': trick.slug }) }}" class="link link-info font-weight-bold">
+                            {{ trick.name | capitalize }}
+                        </a>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-
-        {% endif %}
+            {% endfor %}
+        </div>
     </div>
-
-
 {% endblock %}

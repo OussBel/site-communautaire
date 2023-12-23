@@ -24,7 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @description  The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -35,8 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Trick::class)]
-    private Collection $tricks;
+
 
     #[ORM\Column]
     private bool $isVerified = false;
@@ -50,10 +49,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $tokenRegistrationLifeTime = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Trick::class)]
+    private Collection $tricks;
+
+
     public function __construct() {
-        $this->tricks = new ArrayCollection();
         $this->createdAt = new \DateTime('now');
         $this->tokenRegistrationLifeTime = (new \DateTime('now'))->add(new \DateInterval('P1D'));
+        $this->tricks = new ArrayCollection();
     }
 
     public function getId(): ?int {
@@ -142,34 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
-    /**
-     * @return Collection<int, Trick>
-     */
-    public function getTricks(): Collection {
-        return $this->tricks;
-    }
 
-    public function addTrick(Trick $trick): static
-    {
-        if (!$this->tricks->contains($trick)) {
-            $this->tricks->add($trick);
-            $trick->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrick(Trick $trick): static
-    {
-        if ($this->tricks->removeElement($trick)) {
-            // set the owning side to null (unless already changed)
-            if ($trick->getUser() === $this) {
-                $trick->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function isIsVerified(): ?bool {
         return $this->isVerified;
@@ -217,4 +193,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Trick>
+     */
+    public function getTricks(): Collection
+    {
+        return $this->tricks;
+    }
+
+    public function addTrick(Trick $trick): static
+    {
+        if (!$this->tricks->contains($trick)) {
+            $this->tricks->add($trick);
+            $trick->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrick(Trick $trick): static
+    {
+        if ($this->tricks->removeElement($trick)) {
+            // set the owning side to null (unless already changed)
+            if ($trick->getUser() === $this) {
+                $trick->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

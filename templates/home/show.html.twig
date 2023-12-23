@@ -1,19 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %} Bienvenue - SnowTricks {% endblock %}
 
-{% block carousel %} {% endblock %}
+
+
 {% block body %}
 
-   <div>
-      <img class="" src="{{ asset('assets/empty.png') }}">
-      <h3>{{ trick.name }}</h3>
-      <p>{{ trick.description }}</p>
-      <div>
-         <span>{{ trick.user.name }}</span>
-         <span>Groupe: {{ trick.groupe.name }}</span>
-      </div>
-   </div>
+<div class="container mt-100 mb-100">
+   <img src="{{ asset('assets/empty.png') }}" class="" style="width: 100%">
+    <h3 class="mt-4 text-info font-weight-light">{{trick.name | capitalize }}</h3>
+    <p class="mt-5">{{ trick.description }}</p>
+    <div class="mb-3"> <span class="font-italic font-weight-bold mr-3">Auteur:</span> {{ trick.user.name }}</div>
+    <span class="font-italic font-weight-bold mr-3">Date de création: {{ trick.createdAt|date("d/m/Y") }}</span>
+    {% if trick.modifiedAt is not null %}
+    <span> Dernière modification: {{ trick.modifiedAt|date('d/m/Y') }}</span>
+ {% endif %}
+</div>
 
 
 

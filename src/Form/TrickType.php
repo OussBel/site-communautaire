@@ -3,18 +3,17 @@
 namespace App\Form;
 
 use App\Entity\Groupe;
+use App\Entity\Trick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TrickEditType extends AbstractType
+class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,44 +23,40 @@ class TrickEditType extends AbstractType
                 'attr'  => [
                     'placeholder' => 'Nom',
                 ],
+            ] )
+            ->add('illustrations', CollectionType::class, [
+                'entry_type' => IllustrationsType::class,
+                'entry_options' => [
+                    'label' => false
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+                'label' => false,
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Déscription',
                 'attr'  => [
-                    'placeholder' => 'Déscription',
+                    'placeholder' => 'Description',
                 ],
             ])
-            ->add('groupe', EntityType::class, [ // Adding the group select input
+            ->add('groupe', EntityType::class,  [
                 'label' => 'Groupe',
-                'class' => Groupe::class, // Assuming Group is your entity class
-                'choice_label' => 'name', // Display blank option
-                'placeholder' => '', // Optional placeholder text
-            ])
-            ->add('illustration', FileType::class, [
-                'label' => 'Illustration',
-                'required' => false,
-                'multiple' => true,
-                'attr' => [
-                    'accept' => 'image/*',
-                ],
-            ])
-            ->add('video', UrlType::class, [
-                'label' => 'Lien de la vidéo',
-                'required' => false
+                'class' => Groupe::class,
+                'choice_label' => 'name',
+                'placeholder' => '',
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Soummettre",
+                'label' => "Soumettre",
             ])
-        ;
-
-        ;
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'data_class' => Trick::class,
         ]);
     }
 }

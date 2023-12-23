@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,9 +16,7 @@ class Trick
     #[ORM\Column]
     private ?int $id = null;
 
-
     #[ORM\Column(length: 255, unique: true)]
-    #[UniqueEntity('name')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -25,11 +25,11 @@ class Trick
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private ?array $illustrations = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private ?array $videos = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $modifiedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -39,15 +39,14 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class)]
+    private Collection $illustrations;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $modifiedAt = null;
 
 
     public function __construct() {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new \DateTimeImmutable();
+        $this->illustrations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,26 +90,26 @@ class Trick
         return $this;
     }
 
-    public function getIllustrations(): ?array
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->illustrations;
+        return $this->createdAt;
     }
 
-    public function setIllustrations(?array $illustrations): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->illustrations = $illustrations;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getVideos(): ?array
+    public function getModifiedAt(): ?\DateTimeInterface
     {
-        return $this->videos;
+        return $this->modifiedAt;
     }
 
-    public function setVideos(?array $videos): static
+    public function setModifiedAt(?\DateTimeInterface $modifiedAt): static
     {
-        $this->videos = $videos;
+        $this->modifiedAt = $modifiedAt;
 
         return $this;
     }
@@ -139,29 +138,38 @@ class Trick
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    /**
+     * @return Collection<int, illustrations>
+     */
+    public function getIllustrations(): Collection
     {
-        return $this->createdAt;
+        return $this->illustrations;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function addIllustration(illustrations $illustration): static
     {
-        $this->createdAt = $createdAt;
+        if (!$this->illustrations->contains($illustration)) {
+            $this->illustrations->add($illustration);
+            $illustration->setTrick($this);
+        }
 
         return $this;
     }
 
-    public function getModifiedAt(): ?\DateTimeInterface
+    public function removeIllustration(illustrations $illustration): static
     {
-        return $this->modifiedAt;
-    }
-
-    public function setModifiedAt(?\DateTimeInterface $modifiedAt): static
-    {
-        $this->modifiedAt = $modifiedAt;
+        if ($this->illustrations->removeElement($illustration)) {
+            // set the owning side to null (unless already changed)
+            if ($illustration->getTrick() === $this) {
+                $illustration->setTrick(null);
+            }
+        }
 
         return $this;
     }
+
+
+
 
 
 }
