@@ -28,17 +28,13 @@ class RegisterType extends AbstractType {
                     'placeholder' => 'Email',
                 ],
             ])
-            ->add('password', RepeatedType::class, [
-                'type'            => PasswordType::class,
-                'invalid_message' => 'Le mot de passe et la confirmation doivent etre identique',
+            ->add('password', PasswordType::class, [
                 'label'           => 'Votre mot de passe',
                 'required'        => true,
-                'first_options'   => ['label' => 'Mot de passe'],
-                'second_options'  => ['label' => 'Confirmer votre mot de passe'],
             ])
             ->add('image', FileType::class)
             ->add('submit', SubmitType::class, [
-                'label' => "S'inscrire",
+                'label' => "S'inscrire"
             ])
         ;
     }

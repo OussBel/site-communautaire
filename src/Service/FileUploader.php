@@ -9,6 +9,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploader
 {
+
     public function __construct(
         private readonly string           $targetDirectory,
         private readonly SluggerInterface $slugger,
@@ -20,17 +21,18 @@ class FileUploader
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
-        $fileName = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+        $filename=  $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
         try {
-            $file->move($this->getTargetDirectory(), $fileName);
+            $file->move($this->getTargetDirectory(), $filename);
         } catch (FileException $e) {
             error_log("Échec du téléchargement de l'image", $e->getMessage());
             throw $e;
         }
 
-        return $fileName;
+        return $filename;
     }
+
 
     public function getTargetDirectory(): string
     {

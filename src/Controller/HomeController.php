@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Form\TrickType;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,16 +43,19 @@ class HomeController extends AbstractController
         return $this->render('home/show.html.twig', ['trick' => $trick]);
     }
 
-
-    /**
-     * @throws \Exception
-     */
     #[Route('/ajouter-une-figure', name: 'app_trick_add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
         $trick = new Trick();
 
-        return $this->render('home/form.html.twig');
+        $form = $this->createForm(TrickType::class, $trick);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+        }
+
+        return $this->render('home/form.html.twig',['form' => $form]);
     }
 
 }

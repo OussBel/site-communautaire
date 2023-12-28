@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegisterType;
+use App\Service\FileUploader;
 use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,16 +19,18 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 class RegisterController extends AbstractController
 {
 
-    #[Route('/inscription', name: 'app_register')]
+    #[Route('/compte/inscription', name: 'app_register')]
     public function index(Request                     $request,
                           EntityManagerInterface      $entityManager,
                           UserPasswordHasherInterface $passwordHasher,
                           TokenGeneratorInterface     $tokenGeneratorInterface,
-                          MailerService               $mailerService
+                          MailerService               $mailerService,
+                          FileUploader                $fileUploader,
+                          Security $security
     ): Response
     {
 
-        if($this->getUser()) {
+        if($security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_home');
         }
 
@@ -36,12 +40,21 @@ class RegisterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $tokenRegistration = $tokenGeneratorInterface->generateToken();
 
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
             $user->setTokenRegistration($tokenRegistration);
+            $user->setRoles(['ROLE_USER']);
+
+            $image = $form->get('image')->getData();
+
+
+            if($image) {
+                $fileName = $fileUploader->upload($image);
+                $user->setImage($fileName);
+            }
+
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -67,7 +80,7 @@ class RegisterController extends AbstractController
     }
 
     #[Route('/verify/{token}/{id<\d+>}', name: 'account_verify', methods: ['GET'])]
-    public function verify( string $token, User $user, EntityManagerInterface $entityManager): Response
+    public function verify(string $token, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($user->getTokenRegistration() !== $token) {
             throw new AccessDeniedException();

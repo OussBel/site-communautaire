@@ -32,7 +32,7 @@
     <link href={{ asset("css/carousel.css") }} rel="stylesheet">
 </head>
 <body>
-<header class="position-relative {% if app.request.attributes.get('_route') == 'app_home' %} vh-100 {% endif %}">
+<header class="position-relative overflow-hidden {% if app.request.attributes.get('_route') == 'app_home' %} vh-100 {% endif %}">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="{{ path('app_home') }}">
             <img src="{{ asset('assets/logo.svg') }}" alt="logo" width="45" height="40">
@@ -49,11 +49,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Figures</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="{{ path('app_register') }}">
-                        Enregistrer
-                    </a>
-                </li>
                 {% if app.user %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}">
@@ -61,6 +56,11 @@
                         </a>
                     </li>
                 {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link " href="{{ path('app_register') }}">
+                            Enregistrer
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_login') }}">
                             Se connecter

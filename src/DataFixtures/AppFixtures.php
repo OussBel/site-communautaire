@@ -26,11 +26,11 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         $groups = $manager->getRepository(Groupe::class)->findAll();
 
         foreach ($users as $user) {
-            for ($i = 0; $i < 30; $i++) {
+            for ($i = 0; $i < 7; $i++) {
                 $trick = new Trick();
                 $trick->setName($faker->unique()->word());
                 $slug = strtolower($this->slugger->slug($trick->getName()));
-                $trick->setSlug($slug)->setDescription($faker->paragraph(3));
+                $trick->setSlug($slug)->setDescription($faker->paragraph(7));
 
                 $randomGroupId = array_rand($groups);
                 $randomGroupValue = $groups[$randomGroupId];

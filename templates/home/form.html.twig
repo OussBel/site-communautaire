@@ -1,3 +1,26 @@
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block carousel %} {% endblock %}
+{% block title %} Ajout d'une figure - SnowTricks {% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_row(form.description) }}
+
+    <h3>Illustrations</h3>
+
+    <ul class=""
+        data-index="{{ form.illustrations|length > 0 ? form.illustrations|last.vars.name + 1 : 0 }}"
+        data-prototype="{{ form_widget(form.illustrations.vars.prototype)|e('html_attr') }}"
+    >
+        {% for illustration in form.illustrations %}
+            <li>{{ form_row(illustration.name) }}</li>
+            <button type="button" class="add_item_link" data-collection-holder-class="tags">Add a tag</button>
+        {% endfor %}
+    </ul>
+
+    {{ form_end(form) }}
+
+    <script src="{{ asset('js/script.js') }}"></script>
+
+{% endblock %}
