@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController {
-    #[Route(path: '/mon-compte', name: 'app_login')]
+    #[Route(path: '/compte/connexion', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response {
 
         if($this->getUser()) {

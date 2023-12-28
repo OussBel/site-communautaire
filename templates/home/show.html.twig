@@ -2,19 +2,18 @@
 
 {% block title %} Bienvenue - SnowTricks {% endblock %}
 
-
-
 {% block body %}
 
 <div class="container mt-100 mb-100">
-   <img src="{{ asset('assets/empty.png') }}" class="" style="width: 100%">
+   <img src="{{ asset('assets/empty.png') }}" style="width: 100%">
     <h3 class="mt-4 text-info font-weight-light">{{trick.name | capitalize }}</h3>
-    <p class="mt-5">{{ trick.description }}</p>
-    <div class="mb-3"> <span class="font-italic font-weight-bold mr-3">Auteur:</span> {{ trick.user.name }}</div>
-    <span class="font-italic font-weight-bold mr-3">Date de création: {{ trick.createdAt|date("d/m/Y") }}</span>
+    <p class="mt-4">{{ trick.description }}</p>
+    <div class="mb-1"><strong>Auteur: </strong>{{ trick.user.name }}</div>
+ <span class="mr-5"><strong>Date de création: </strong>{{ trick.createdAt|date('d/m/Y', timezone="Europe/Paris")}}</span>
     {% if trick.modifiedAt is not null %}
-    <span> Dernière modification: {{ trick.modifiedAt|date('d/m/Y') }}</span>
+    <span> <strong>Dernière modification: </strong> {{ trick.modifiedAt|date('d/m/Y', timezone="Europe/Paris")}}</span>
  {% endif %}
+ <span><strong>Groupe:</strong> {{ trick.groupe.name }}</span>
 </div>
 
 
