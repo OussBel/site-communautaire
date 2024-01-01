@@ -19,7 +19,7 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 class RegisterController extends AbstractController
 {
 
-    #[Route('/compte/inscription', name: 'app_register')]
+    #[Route('/inscription', name: 'app_register')]
     public function index(Request                     $request,
                           EntityManagerInterface      $entityManager,
                           UserPasswordHasherInterface $passwordHasher,
@@ -30,7 +30,8 @@ class RegisterController extends AbstractController
     ): Response
     {
 
-        if($security->isGranted('ROLE_USER')) {
+
+        if($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
 

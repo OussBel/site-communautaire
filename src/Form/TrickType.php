@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TrickType extends AbstractType
 {
@@ -19,24 +20,24 @@ class TrickType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom',
+                'label' => false,
                 'attr'  => [
                     'placeholder' => 'Nom',
                 ],
             ] )
-            ->add('illustrations', CollectionType::class, [
-                'entry_type' => IllustrationsType::class,
-                'entry_options' => [
-                    'label' => false
-                ],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'required' => false,
-                'label' => false,
-            ])
+          //  ->add('illustrations', CollectionType::class, [
+          //      'entry_type' => IllustrationsType::class,
+          //      'entry_options' => [
+          //          'label' => false
+          //      ],
+          //      'allow_add' => true,
+          //      'allow_delete' => true,
+          //      'by_reference' => false,
+          //      'required' => false,
+         //       'label' => false,
+         //   ])
             ->add('description', TextareaType::class, [
-                'label' => 'Déscription',
+                'label' => false,
                 'attr'  => [
                     'placeholder' => 'Description',
                 ],
@@ -45,7 +46,6 @@ class TrickType extends AbstractType
                 'label' => 'Groupe',
                 'class' => Groupe::class,
                 'choice_label' => 'name',
-                'placeholder' => '',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => "Soumettre",

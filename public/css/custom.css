@@ -21,8 +21,16 @@ body {
     margin-bottom: 100px !important;
 }
 
+.mt-200 {
+    margin-top: 200px !important;
+}
+
+.form-width {
+width:50%;
+}
+
 .bg-img {
-    background-image: linear-gradient(to bottom, rgba(52,58,64, .99) 10%, rgba(52, 58, 64, 0.5)),
+    background-image: linear-gradient(to bottom, rgba(52, 58, 64, .99) 10%, rgba(52, 58, 64, 0.5)),
     url("../assets/homepage.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -37,13 +45,22 @@ body {
 }
 
 .title-center {
-    position : absolute;
+    position: absolute;
     top: 50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-size: 48px;
     font-weight: lighter;
     font-family: 'Caveat', cursive;
+}
+
+.icon {
+    font-size: 18px;
+    float: right;
+}
+
+.trash {
+    color: red;
 }
 
 @media (max-width: 768px) {
@@ -57,7 +74,11 @@ body {
 
     .title-center {
         font-size: 32px;
-        width:80%;
+        width: 80%;
+    }
+
+    .form-width {
+        width: 100%;
     }
 }
 

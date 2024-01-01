@@ -23,6 +23,13 @@ security:
       provider: app_user_provider
       user_checker: App\Security\UserConfirmation
 
+        # Define the entry point for the firewall
+      entry_point: form_login
+
+      form_login:
+        login_path: app_login
+        check_path: app_login
+
       remember_me:
         secret: '%kernel.secret%'
         lifetime: 604800
@@ -45,7 +52,7 @@ security:
   # Note: Only the *first* access control that matches will be used
   access_control:
     # - { path: ^/admin, roles: ROLE_ADMIN }
-    - { path: ^/compte, roles: ROLE_USER, route: app_homepage }
+    - { path: ^/compte, roles: ROLE_USER }
 
 when@test:
   security:
