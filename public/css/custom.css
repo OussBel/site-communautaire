@@ -63,6 +63,10 @@ width:50%;
     color: red;
 }
 
+.bg-gray {
+    background-color: #eee;
+}
+
 @media (max-width: 768px) {
     .bg-img {
         height: 70vh;

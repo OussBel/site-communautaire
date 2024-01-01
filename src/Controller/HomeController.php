@@ -43,6 +43,19 @@ class HomeController extends AbstractController
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $comment = $form->getData();
+            $comment->setAuthor($this->getUser());
+            $comment->setTrick($trick);
+
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_trick', ['slug' => $trick->getSlug()]);
+        }
+
         return $this->render('home/show.html.twig', ['trick' => $trick, 'form' => $form]);
     }
 

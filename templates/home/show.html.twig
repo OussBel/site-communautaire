@@ -9,7 +9,7 @@
         <h3 class="mt-4 text-info font-weight-light">{{ trick.name | capitalize }}</h3>
         <p class="mt-4">{{ trick.description }}</p>
         <div class="mb-3 mt-5"><strong>Auteur: </strong>{{ trick.user.name }}</div>
-        <div class="d-flex flex-column flex-md-row justify-content-between">
+        <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
         <span class="">
             <strong>Date de création: </strong>{{ trick.createdAt|date('d/m/Y', timezone="Europe/Paris") }}
         </span>
@@ -21,9 +21,26 @@
             <span><strong>Groupe:</strong> {{ trick.groupe.name }}</span>
         </div>
 
-        <div class="mt-5">
-        {{ form(form) }}
-        </div>
+        {% if app.user %}
+            <div class="mt-5 mb-5">
+                <h4 class="text-center mb-3">Laisser un commentaire</h4>
+                {{ form(form) }}
+            </div>
+        {% endif %}
+
+        {% for comment in trick.comments|reverse %}
+            <div class="bg-gray mt-2 mb-2 p-3 rounded">
+                <p>{{ comment.content }}</p>
+                <div class="d-flex align-items-center justify-content-around">
+                <img src="{{ asset('assets/illustrations/' ~ comment.author.image) }}"
+                     class="rounded-circle" style="width: 50px" alt=""
+                >
+                <span class="ml-3">{{ comment.author.name }}</span>
+
+                <span class="ml-5">{{ comment.createdAt|date('d/m/Y', timezone="Europe/Paris") }}</span>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
 
