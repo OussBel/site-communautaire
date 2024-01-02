@@ -7,8 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Trick
 {
     #[ORM\Id]
@@ -17,12 +20,14 @@ class Trick
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'Le nom ne doit pas etre vide')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message:'La déscription ne doit pas être vide')]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -42,11 +47,15 @@ class Trick
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class)]
     private Collection $illustrations;
 
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
+    private Collection $comments;
+
 
 
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
         $this->illustrations = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -114,10 +123,23 @@ class Trick
         return $this;
     }
 
+    #[ORM\PreUpdate]
+    public function setModifiedAtValue(): void
+    {
+        $this->modifiedAt = new \DateTime('now') ;
+    }
+
     public function getGroupe(): ?Groupe
     {
         return $this->groupe;
     }
+
+    //public function getGroupeArray(GroupeRepository $groupeRepository): array
+    //{
+    //    $availableChoices = $groupeRepository->findAll();
+
+     //   return array_map(fn($groupe) => $groupe->getName(), $availableChoices);
+    //}
 
     public function setGroupe(?Groupe $groupe): static
     {
@@ -162,6 +184,36 @@ class Trick
             // set the owning side to null (unless already changed)
             if ($illustration->getTrick() === $this) {
                 $illustration->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
             }
         }
 
