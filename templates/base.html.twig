@@ -11,6 +11,8 @@
     <!-- Bootstrap core CSS -->
     <link href={{ asset("css/bootstrap.min.css") }} rel="stylesheet">
     <link href={{ asset("css/custom.css") }} rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 
     <style>
         .bd-placeholder-img {
@@ -32,7 +34,7 @@
     <link href={{ asset("css/carousel.css") }} rel="stylesheet">
 </head>
 <body>
-<header class="position-relative {% if app.request.attributes.get('_route') == 'app_home' %} vh-100 {% endif %}">
+<header class="position-relative overflow-hidden {% if app.request.attributes.get('_route') == 'app_home' %} vh-100 {% endif %}">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="{{ path('app_home') }}">
             <img src="{{ asset('assets/logo.svg') }}" alt="logo" width="45" height="40">
@@ -49,11 +51,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Figures</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="{{ path('app_register') }}">
-                        Enregistrer
-                    </a>
-                </li>
                 {% if app.user %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}">
@@ -61,6 +58,11 @@
                         </a>
                     </li>
                 {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link " href="{{ path('app_register') }}">
+                            Enregistrer
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_login') }}">
                             Se connecter
@@ -91,6 +93,11 @@
      </footer>  -->
 </main>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+{#
+<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+#}
 <script src={{ asset("js/bootstrap.bundle.js") }}></script>
+
 </body>
 </html>

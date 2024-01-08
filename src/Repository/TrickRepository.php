@@ -21,6 +21,12 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
+
+
+
+
+
+
 //    /**
 //     * @return Trick[] Returns an array of Trick objects
 //     */
