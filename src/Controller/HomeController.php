@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Form\TrickType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Service\FormHandler;
 use App\Service\TrickFormHandler;
@@ -37,15 +38,18 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', ['tricks' => $tricks]);
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route('/figure/{slug}', name: 'app_trick')]
-    public function show(Trick $trick, Request $request): Response
+    public function show(Trick $trick, Request $request, CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment = $form->getData();
             $comment->setAuthor($this->getUser());
             $comment->setTrick($trick);
@@ -56,14 +60,22 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_trick', ['slug' => $trick->getSlug()]);
         }
 
-        return $this->render('home/show.html.twig', ['trick' => $trick, 'form' => $form]);
+        $page = $request->query->getInt('page', 1);
+
+        $comments = $commentRepository->pagination($page, $trick->getSlug());
+
+        return $this->render('home/show.html.twig', [
+            'trick' => $trick,
+            'form' => $form,
+            'comments' => $comments,
+            'page' => $page
+        ]);
     }
+
 
     #[Route('/compte/ajouter-une-figure', name: 'app_trick_add')]
     public function add(Request $request, TrickFormHandler $trickFormHandler): Response
     {
-
-        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $trick = new Trick();
 
@@ -75,7 +87,7 @@ class HomeController extends AbstractController
 
         if ($trickFormHandler->handleForm($form, $currentUser)) {
 
-            $this->addFlash('success', 'La figure a été ajoutée');
+            $this->addFlash('success', 'La figure a été ajoutée avec succès');
 
             return $this->redirectToRoute('app_home');
         }
@@ -87,7 +99,6 @@ class HomeController extends AbstractController
     #[Route('/compte/modifier-une-figure/{id<\d+>}', name: 'app_trick_edit')]
     public function edit(Trick $trick, Request $request, TrickFormHandler $trickFormHandler): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
 
         if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
 
@@ -99,7 +110,7 @@ class HomeController extends AbstractController
 
         if ($trickFormHandler->handleForm($form, $currentUser)) {
 
-            $this->addFlash('success', 'La figure a été mise à jour');
+            $this->addFlash('success', 'La figure a été mise à jour avec succès');
 
             return $this->redirectToRoute('app_home');
         }
@@ -111,12 +122,13 @@ class HomeController extends AbstractController
     #[Route('/compte/supprimer-une-figure/{id<\d+>}', name: 'app_trick_delete')]
     public function delete(Request $request, Trick $trick): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
 
         $this->entityManager->remove($trick);
         $this->entityManager->flush();
 
-        $this->addFlash('success', 'La figure a été supprimée');
+        $this->addFlash('success', 'La figure a été supprimée avec succès');
 
         return $this->redirectToRoute('app_home');
     }

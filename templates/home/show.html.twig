@@ -28,21 +28,24 @@
             </div>
         {% endif %}
 
-        {% for comment in trick.comments|reverse %}
-            <div class="bg-gray mt-2 mb-2 p-3 rounded">
-                <p>{{ comment.content }}</p>
+        {% for comment in comments.data %}
+            <div class="bg-gray mt-2 mb-4 p-3 shadow-sm rounded">
+                <p class="pr-5 pl-5">{{ comment.content }}</p>
                 <div class="d-flex align-items-center justify-content-around">
-                <img src="{{ asset('assets/illustrations/' ~ comment.author.image) }}"
-                     class="rounded-circle" style="width: 50px" alt=""
-                >
-                <span class="ml-3">{{ comment.author.name }}</span>
+                    <img src="{{ asset('assets/illustrations/' ~ comment.author.image) }}"
+                         class="rounded-circle" style="width: 50px" alt="{{ comment.author.image }}"
+                    >
+                    <span class="ml-3 font-weight-bold"> {{ comment.author.name }}</span>
 
-                <span class="ml-5">{{ comment.createdAt|date('d/m/Y', timezone="Europe/Paris") }}</span>
+                    <span class="ml-5">{{ comment.createdAt|date('d/m/Y', timezone="Europe/Paris") }}</span>
                 </div>
             </div>
         {% endfor %}
+
+        {% set path = 'app_trick' %}
+        {% set currentPage = comments.page %}
+        {% set pages = comments.pages %}
+        {% include "_partials/_pagination.html.twig" %}
+
     </div>
-
-
-
 {% endblock %}
