@@ -17,8 +17,35 @@
             {{ form_widget(form.groupe) }}
         </div>
 
+        <div>
+
+                <h3>Ajouter des images:</h3>
+                <ul class="tags"
+                    data-index="{{ form.illustrations|length > 0 ? form.illustrations|last.vars.name + 1 : 0 }}"
+                    data-prototype="{{ form_widget(form.illustrations.vars.prototype)|e('html_attr') }}">
+
+                    {% for illustration in form.illustrations %}
+                        <li>
+                            {{ form_label(illustration.name) }}
+                            {{ form_widget(illustration.name, {'attr': {'accept': 'image/*'}}) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="add_item_link" data-collection-holder-class="tags">Ajouter une image</button>
+        </div>
 
         {{ form_end(form) }}
+    </div>
+
+
+
+    <div class="row js-wrapper">
+        <div class="js-item">
+            <a href="#" class="js-remove-item">
+                <span class="fa fa-icon"></span>
+                <span>Delete</span>
+            </a>
+        </div>
     </div>
 
     <script src="{{ asset('js/script.js') }}"></script>

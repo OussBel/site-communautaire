@@ -14,11 +14,10 @@ class IllustrationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', FileType::class, [
+            ->add('file', FileType::class, [
                 'label' => 'Joindre une image',
-                'mapped' => false,
+                'mapped' => true, // Set mapped to true
                 'required' => false,
-                'multiple' => true,
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
@@ -35,7 +34,6 @@ class IllustrationsType extends AbstractType
                     'accept' => 'image/*',
                 ]
             ]);
-
 
     }
 

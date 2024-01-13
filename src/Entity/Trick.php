@@ -44,13 +44,11 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class, cascade: ['persist'])]
     private Collection $illustrations;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
-
-
 
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
@@ -134,12 +132,6 @@ class Trick
         return $this->groupe;
     }
 
-    //public function getGroupeArray(GroupeRepository $groupeRepository): array
-    //{
-    //    $availableChoices = $groupeRepository->findAll();
-
-     //   return array_map(fn($groupe) => $groupe->getName(), $availableChoices);
-    //}
 
     public function setGroupe(?Groupe $groupe): static
     {
@@ -219,9 +211,6 @@ class Trick
 
         return $this;
     }
-
-
-
 
 
 }

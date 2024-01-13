@@ -1,7 +1,7 @@
 {% if pages > 1 %}
     <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5">
         <ul class="pagination">
-            {% if page > 1 %}
+            {% if currentPage > 1 %}
                 <li class="page-item">
                     <a class="page-link font-weight-bold"
                        href="{{ path('app_trick', {slug: trick.slug, page: currentPage - 1 }) }}">
@@ -16,7 +16,7 @@
                 </li>
             {% endif %}
 
-            {% if page < pages %}
+            {% if currentPage < pages %}
                 <li class="page-item">
                     <a class="page-link font-weight-bold"
                        href="{{ path('app_trick', {slug: trick.slug, page: currentPage + 1 }) }}">

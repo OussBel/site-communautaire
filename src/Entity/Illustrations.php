@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\IllustrationsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: IllustrationsRepository::class)]
 class Illustrations
@@ -15,6 +16,9 @@ class Illustrations
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
+    private ?UploadedFile $file = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'illustrations')]
     private ?Trick $trick = null;
@@ -47,4 +51,15 @@ class Illustrations
 
         return $this;
     }
+
+    public function getFile(): ?UploadedFile
+    {
+        return $this->file;
+    }
+
+    public function setFile(?UploadedFile $file): void
+    {
+        $this->file = $file;
+    }
+
 }

@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Illustrations;
 use App\Entity\Trick;
 use App\Form\CommentType;
+use App\Form\IllustrationsType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
