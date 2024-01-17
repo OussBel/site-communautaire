@@ -67,6 +67,10 @@ width:50%;
     background-color: #eee;
 }
 
+.top-10 {
+    top:10% !important;
+}
+
 @media (max-width: 768px) {
     .bg-img {
         height: 70vh;

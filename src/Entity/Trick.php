@@ -44,16 +44,17 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class, cascade: ['persist'])]
-    private Collection $illustrations;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $Illustrations;
+
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
-        $this->illustrations = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->Illustrations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,35 +153,7 @@ class Trick
         return $this;
     }
 
-    /**
-     * @return Collection<int, illustrations>
-     */
-    public function getIllustrations(): Collection
-    {
-        return $this->illustrations;
-    }
 
-    public function addIllustration(illustrations $illustration): static
-    {
-        if (!$this->illustrations->contains($illustration)) {
-            $this->illustrations->add($illustration);
-            $illustration->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIllustration(illustrations $illustration): static
-    {
-        if ($this->illustrations->removeElement($illustration)) {
-            // set the owning side to null (unless already changed)
-            if ($illustration->getTrick() === $this) {
-                $illustration->setTrick(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Comment>
@@ -212,5 +185,34 @@ class Trick
         return $this;
     }
 
+    /**
+     * @return Collection<int, Illustrations>
+     */
+    public function getIllustrations(): Collection
+    {
+        return $this->Illustrations;
+    }
+
+    public function addIllustration(Illustrations $illustration): static
+    {
+        if (!$this->Illustrations->contains($illustration)) {
+            $this->Illustrations->add($illustration);
+            $illustration->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIllustration(Illustrations $illustration): static
+    {
+        if ($this->Illustrations->removeElement($illustration)) {
+            // set the owning side to null (unless already changed)
+            if ($illustration->getTrick() === $this) {
+                $illustration->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

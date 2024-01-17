@@ -12,7 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TrickType extends AbstractType
 {
@@ -26,7 +25,7 @@ class TrickType extends AbstractType
                 ],
             ])
             ->add('illustrations', CollectionType::class, [
-                'entry_type' => IllustrationsType::class,
+                'entry_type' => IllustrationType::class,
                 'entry_options' => [
                     'label' => false
                 ],

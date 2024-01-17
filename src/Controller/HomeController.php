@@ -9,6 +9,7 @@ use App\Form\CommentType;
 use App\Form\IllustrationsType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
+use App\Repository\IllustrationsRepository;
 use App\Repository\TrickRepository;
 use App\Service\FormHandler;
 use App\Service\TrickFormHandler;
@@ -99,10 +100,16 @@ class HomeController extends AbstractController
 
 
     #[Route('/compte/modifier-une-figure/{id<\d+>}', name: 'app_trick_edit')]
-    public function edit(Trick $trick, Request $request, TrickFormHandler $trickFormHandler): Response
+    public function edit(Trick                   $trick,
+                         Request                 $request,
+                         TrickFormHandler        $trickFormHandler,
+                         IllustrationsRepository $illustrationsRepository
+    ): Response
     {
 
         if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
+
+        $uploadedIllustrations = $illustrationsRepository->illustrationsByTrickId($trick);
 
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -117,12 +124,16 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('home/form.html.twig', ['form' => $form]);
+        return $this->render('home/form.html.twig',
+            [
+                'form' => $form,
+                'uploadedIllustrations' => $uploadedIllustrations
+            ]);
 
     }
 
     #[Route('/compte/supprimer-une-figure/{id<\d+>}', name: 'app_trick_delete')]
-    public function delete(Request $request, Trick $trick): Response
+    public function delete(Trick $trick): Response
     {
 
         if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
@@ -134,6 +145,20 @@ class HomeController extends AbstractController
 
         return $this->redirectToRoute('app_home');
     }
+
+    #[Route('/compte/supprimer-une-image/{id<\d+>}', name: 'app_illustration_delete')]
+    public function deleteIllustration(Illustrations $illustrations, Trick $trick): Response
+    {
+
+
+        $this->entityManager->remove($illustrations);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', "L'image' a été supprimée avec succès");
+
+        return $this->redirectToRoute('app_trick_edit', ['id' => $trick->getId()]);
+    }
+
 
 
 }

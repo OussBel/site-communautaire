@@ -14,30 +14,18 @@ class Illustrations
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'Illustrations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Trick $trick = null;
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     private ?UploadedFile $file = null;
 
-
-    #[ORM\ManyToOne(inversedBy: 'illustrations')]
-    private ?Trick $trick = null;
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getTrick(): ?Trick
@@ -52,6 +40,18 @@ class Illustrations
         return $this;
     }
 
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
     public function getFile(): ?UploadedFile
     {
         return $this->file;
@@ -60,6 +60,6 @@ class Illustrations
     public function setFile(?UploadedFile $file): void
     {
         $this->file = $file;
-    }
 
+    }
 }

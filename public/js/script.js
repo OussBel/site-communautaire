@@ -1,4 +1,3 @@
-
 const addFormToCollection = (e) => {
     const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
 
@@ -22,3 +21,10 @@ document
     .forEach(btn => {
         btn.addEventListener("click", addFormToCollection)
     });
+
+
+
+
+
+
+

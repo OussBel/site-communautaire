@@ -17,37 +17,55 @@
             {{ form_widget(form.groupe) }}
         </div>
 
-        <div>
+        {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
+            <div class="row">
+                {% for uploadedIllustration in uploadedIllustrations %}
+                    <div class="col-12 col-lg-6 mb-4 position-relative">
+                      <img src="{{ asset('assets/illustrations/'~uploadedIllustration.name) }}"
+                             class="d-block w-100 object-fit-cover"
+                        >
+                        <a href="{{ path('app_illustration_delete', {'id': uploadedIllustration.id }) }}" class="js-remove-item">
+                            <i class="fa-regular fa-trash-can icon text-danger ml-2"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                <h3>Ajouter des images:</h3>
-                <ul class="tags"
-                    data-index="{{ form.illustrations|length > 0 ? form.illustrations|last.vars.name + 1 : 0 }}"
-                    data-prototype="{{ form_widget(form.illustrations.vars.prototype)|e('html_attr') }}">
+        <div>
+            <h3>Ajouter des images:</h3>
+            <ul class="tags"
+                data-index="{{ form.illustrations|length > 0 ? form.illustrations|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_widget(form.illustrations.vars.prototype)|e('html_attr') }}">
+
+                {% if app.request.attributes.get('_route') == 'app_trick_add' %}
 
                     {% for illustration in form.illustrations %}
-                        <li>
-                            {{ form_label(illustration.name) }}
-                            {{ form_widget(illustration.name, {'attr': {'accept': 'image/*'}}) }}
+                        <li class="js-item">
+                            {{ form_label(illustration.file) }}
+                            {{ form_widget(illustration.file, {'attr': {'accept': 'image/*'}}) }}
                         </li>
                     {% endfor %}
-                </ul>
-                <button type="button" class="add_item_link" data-collection-holder-class="tags">Ajouter une image</button>
+                {% endif %}
+
+                {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
+
+                    {% for illustration in form.illustrations %}
+                        <li class="js-item" style="display: none">
+                            {{ form_label(illustration.file) }}
+                            {{ form_widget(illustration.file, {'attr': {'accept': 'image/*'}}) }}
+                        </li>
+                    {% endfor %}
+                {% endif %}
+
+            </ul>
+            <button type="button" class="add_item_link" data-collection-holder-class="tags">Ajouter une image</button>
         </div>
 
         {{ form_end(form) }}
     </div>
 
-
-
-    <div class="row js-wrapper">
-        <div class="js-item">
-            <a href="#" class="js-remove-item">
-                <span class="fa fa-icon"></span>
-                <span>Delete</span>
-            </a>
-        </div>
-    </div>
-
     <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/delete.js') }}"></script>
 
 {% endblock %}

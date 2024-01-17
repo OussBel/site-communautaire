@@ -9,14 +9,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-class IllustrationsType extends AbstractType
+class IllustrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('file', FileType::class, [
                 'label' => 'Joindre une image',
-                'mapped' => true, // Set mapped to true
+                'mapped' => true,
                 'required' => false,
                 'constraints' => [
                     new File([
@@ -34,7 +34,7 @@ class IllustrationsType extends AbstractType
                     'accept' => 'image/*',
                 ]
             ]);
-
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

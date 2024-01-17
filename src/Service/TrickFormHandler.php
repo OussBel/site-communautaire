@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class TrickFormHandler
@@ -21,10 +22,14 @@ class TrickFormHandler
             $trick = $form->getData();
 
             foreach ($trick->getIllustrations() as $illustration) {
+
                 $image = $illustration->getFile();
-                $imageName = $this->fileUploader->upload($image);
-                $illustration->setName($imageName);
-                $illustration->setTrick($trick);
+
+                if($image instanceof UploadedFile ) {
+                    $imageName = $this->fileUploader->upload($image);
+                    $illustration->setName($imageName);
+                    $illustration->setTrick($trick);
+                }
 
             }
 
