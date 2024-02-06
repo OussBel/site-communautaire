@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -27,7 +28,8 @@ class Trick
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(message:'La déscription ne doit pas être vide')]
+    #[Assert\NotBlank(message: 'La déscription ne doit pas être vide')]
+    #[Assert\NotNull(message: 'La déscription ne doit pas être vide')]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -49,12 +51,19 @@ class Trick
     private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Assert\Valid]
     private Collection $Illustrations;
 
-    public function __construct() {
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Videos::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Assert\Valid]
+    private Collection $Videos;
+
+    public function __construct()
+    {
         $this->createdAt = new \DateTimeImmutable();
         $this->comments = new ArrayCollection();
         $this->Illustrations = new ArrayCollection();
+        $this->Videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,7 +134,7 @@ class Trick
     #[ORM\PreUpdate]
     public function setModifiedAtValue(): void
     {
-        $this->modifiedAt = new \DateTime('now') ;
+        $this->modifiedAt = new \DateTime('now');
     }
 
     public function getGroupe(): ?Groupe
@@ -152,7 +161,6 @@ class Trick
 
         return $this;
     }
-
 
 
     /**
@@ -203,12 +211,58 @@ class Trick
         return $this;
     }
 
+    public function getFirstIllustration(): Illustrations
+    {
+        $firstIllustration = $this->Illustrations->first();
+
+        if (!$firstIllustration) {
+            $firstIllustration = new Illustrations();
+            $firstIllustration->setName('empty.png');
+            $firstIllustration->setTrick($this);
+            $this->Illustrations->add($firstIllustration);
+        }
+
+        return $firstIllustration;
+    }
+
+
     public function removeIllustration(Illustrations $illustration): static
     {
         if ($this->Illustrations->removeElement($illustration)) {
             // set the owning side to null (unless already changed)
             if ($illustration->getTrick() === $this) {
                 $illustration->setTrick(null);
+            }
+            $this->modifiedAt = new \DateTime('now');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Videos>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->Videos;
+    }
+
+    public function addVideo(Videos $video): static
+    {
+        if (!$this->Videos->contains($video)) {
+            $this->Videos->add($video);
+            $video->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Videos $video): static
+    {
+        if ($this->Videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
             }
         }
 

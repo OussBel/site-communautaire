@@ -17,6 +17,10 @@ body {
     margin-top: 100px !important;
 }
 
+.mt-200 {
+    margin-top: 200px !important;
+}
+
 .mb-100 {
     margin-bottom: 100px !important;
 }
@@ -26,7 +30,11 @@ body {
 }
 
 .form-width {
-width:50%;
+    width: 50%;
+}
+
+.img-height {
+    height: 270px;
 }
 
 .bg-img {
@@ -56,7 +64,6 @@ width:50%;
 
 .icon {
     font-size: 18px;
-    float: right;
 }
 
 .trash {
@@ -68,7 +75,37 @@ width:50%;
 }
 
 .top-10 {
-    top:10% !important;
+    top: 10% !important;
+}
+
+.box-img {
+    position: relative !important;;
+}
+
+.x-icon {
+    position: absolute;
+    top: 0;
+    right: 5%;
+    background-color: #f1f1f1;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+.pen-icon {
+    position: absolute;
+    top: 0;
+    right: 10%;
+    background-color: #f1f1f1;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.add_item_link {
+    font-size: 20px;
 }
 
 @media (max-width: 768px) {
@@ -88,6 +125,8 @@ width:50%;
     .form-width {
         width: 100%;
     }
+
+
 }
 
 

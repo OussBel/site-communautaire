@@ -8,6 +8,7 @@ use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Form\IllustrationsType;
 use App\Form\TrickType;
+use App\Kernel;
 use App\Repository\CommentRepository;
 use App\Repository\IllustrationsRepository;
 use App\Repository\TrickRepository;
@@ -41,12 +42,14 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', ['tricks' => $tricks]);
     }
 
-    /**
-     * @throws \Exception
-     */
+
     #[Route('/figure/{slug}', name: 'app_trick')]
-    public function show(Trick $trick, Request $request, CommentRepository $commentRepository): Response
+    public function show(Trick $trick, Request $request, CommentRepository $commentRepository,
+                         IllustrationsRepository $illustrationsRepository): Response
     {
+
+
+
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
@@ -67,11 +70,13 @@ class HomeController extends AbstractController
 
         $comments = $commentRepository->pagination($page, $trick->getSlug());
 
+
         return $this->render('home/show.html.twig', [
             'trick' => $trick,
             'form' => $form,
             'comments' => $comments,
-            'page' => $page
+            'page' => $page,
+            'firstIllustration' => $trick->getFirstIllustration()
         ]);
     }
 
@@ -109,13 +114,16 @@ class HomeController extends AbstractController
 
         if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
 
+
         $uploadedIllustrations = $illustrationsRepository->illustrationsByTrickId($trick);
 
         $form = $this->createForm(TrickType::class, $trick);
 
+
         $form->handleRequest($request);
 
         $currentUser = $this->getUser();
+
 
         if ($trickFormHandler->handleForm($form, $currentUser)) {
 
@@ -133,13 +141,26 @@ class HomeController extends AbstractController
     }
 
     #[Route('/compte/supprimer-une-figure/{id<\d+>}', name: 'app_trick_delete')]
-    public function delete(Trick $trick): Response
+    public function delete(Trick $trick, Kernel $kernel): Response
     {
 
         if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
 
+        $illustrations = $trick->getIllustrations();
+
         $this->entityManager->remove($trick);
         $this->entityManager->flush();
+
+        $projectDir = $kernel->getProjectDir();
+
+        foreach($illustrations as $illustration) {
+            $imagePath = $projectDir. '/public/assets/illustrations/' . $illustration->getName();
+
+            if(file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
 
         $this->addFlash('success', 'La figure a été supprimée avec succès');
 
@@ -147,18 +168,34 @@ class HomeController extends AbstractController
     }
 
     #[Route('/compte/supprimer-une-image/{id<\d+>}', name: 'app_illustration_delete')]
-    public function deleteIllustration(Illustrations $illustrations, Trick $trick): Response
+    public function deleteIllustration(Illustrations $illustrations, Kernel $kernel): Response
     {
 
+        $trick = $illustrations->getTrick();
+        $trickId = $trick->getId();
+
+        $projectDir = $kernel->getProjectDir();
+        $imagePath = $projectDir . '/public/assets/illustrations/' . $illustrations->getName();
+
+        $trick->removeIllustration($illustrations);
 
         $this->entityManager->remove($illustrations);
         $this->entityManager->flush();
 
-        $this->addFlash('success', "L'image' a été supprimée avec succès");
+        if (!$this->entityManager->contains($illustrations)) {
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+                $this->addFlash('success', "L'image a été supprimée avec succès");
+            } else {
+                $this->addFlash('warning', "La suppression de l'image a échoué");
+            }
 
-        return $this->redirectToRoute('app_trick_edit', ['id' => $trick->getId()]);
+        } else {
+            $this->addFlash('danger', "La suppression de l'image a échoué");
+        }
+
+        return $this->redirectToRoute('app_trick_edit', ['id' => $trickId]);
     }
-
 
 
 }

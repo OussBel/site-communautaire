@@ -1,11 +1,14 @@
 jQuery(document).ready(function(){
-    var wrapper = $('.tags');
+    // Remove the element with id 'trick_illustrations' when the page is loaded
+   // $("#trick_illustrations").remove();
 
-    wrapper.on('click','.js-remove-item', function(e){
-        e.preventDefault()
-        console.log('delete')
+    console.log('ok')
 
-        $(this).closest('.js-item').remove()
+    //var wrapper = $('.js-wrapper');
 
-    })
+   // wrapper.on('click', '.js-remove-item', function(e){
+   //     e.preventDefault();
+   //     $(this).closest('.js-item').remove();
+   // });
 });
+

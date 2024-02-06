@@ -13,19 +13,22 @@
             {% endif %}
             {% for trick in tricks %}
                 <div class="card col-lg-4 col-md-6 col-12 border-0">
-                    <img src="{{ asset('assets/empty.png') }}" class="card-img-top" alt="empty">
+                    <img src="{{ asset('assets/illustrations/'~trick.firstIllustration.name) }}"
+                         class="card-img-top img-height" alt="empty">
                     <div class="card-body text-center">
                         <a href="{{ path('app_trick', {'slug': trick.slug }) }}"
                            class=" text-decoration-none font-weight-bolder">
                             {{ trick.name | capitalize }}
                         </a>
                         {% if app.user is same as(trick.user) %}
-                            <a href="{{ path('app_trick_delete', {'id': trick.id }) }}">
+
+                            <a href="{{ path('app_trick_delete', {'id': trick.id }) }}" class="float-right mr-2">
                                 <i class="fa-regular fa-trash-can icon text-danger ml-2"></i>
                             </a>
-                            <a href="{{ path('app_trick_edit', {'id': trick.id }) }}">
+                            <a href="{{ path('app_trick_edit', {'id': trick.id }) }}" class="float-right">
                                 <i class="fa-solid fa-pen-to-square icon"></i>
                             </a>
+
                         {% endif %}
                     </div>
                 </div>
