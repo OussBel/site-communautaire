@@ -35,16 +35,9 @@
                 {% endfor %}
             </div>
 
-            {% for illustration in form.illustrations %}
-                <li class="list-unstyled">
-                    <label class="pen-icon cursor-pointer">
-                        <i class="fa-solid fa-pen-to-square icon text-primary"></i>
-                        {{ form_widget(illustration.file, {'attr': {'style': 'display: none;'}}) }}
-                    </label>
-                </li>
-            {% endfor %}
         {% endif %}
 
+        {{ form_errors(form.illustrations) }}
         <ul class="js-images list-unstyled"
             data-index="{{ form.illustrations|length > 0 ? form.illustrations|last.vars.name + 1 : 0 }}"
             data-prototype="{{ form_widget(form.illustrations.vars.prototype)|e('html_attr') }}">

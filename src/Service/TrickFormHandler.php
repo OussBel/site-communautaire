@@ -22,11 +22,12 @@ class TrickFormHandler
 
         $trick = $form->getData();
 
+
         foreach ($trick->getVideos() as $video) {
             $videoIframe = $video->getName();
             $extractedSrc = $this->videoIframeExtractor->extractSrc($videoIframe);
 
-           if (!$extractedSrc) {
+            if (!$extractedSrc) {
                 $form->get('videos')
                     ->addError(new FormError('Lien video invalide, veuillez ajouter un lien de vidéo intégré'));
                 return false;
@@ -38,6 +39,7 @@ class TrickFormHandler
         if ($form->isSubmitted() && $form->isValid()) {
 
             foreach ($trick->getIllustrations() as $illustration) {
+
                 $image = $illustration->getFile();
 
                 if ($image instanceof UploadedFile) {
@@ -46,7 +48,6 @@ class TrickFormHandler
                     $illustration->setTrick($trick);
                 }
             }
-
 
 
             $slug = $this->slugger->slug(strtolower($trick->getName()));
