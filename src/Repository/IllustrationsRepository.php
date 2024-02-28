@@ -21,6 +21,16 @@ class IllustrationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Illustrations::class);
     }
 
+
+    public function illustrationsByTrickId($trick) {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.trick = :trick')
+            ->setParameter('trick', $trick)
+            ->getQuery()
+            ->getResult();
+
+    }
+
 //    /**
 //     * @return Illustrations[] Returns an array of Illustrations objects
 //     */

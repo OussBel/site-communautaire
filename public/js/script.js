@@ -1,6 +1,5 @@
-// form_handling.js
-
 const addFormToCollection = (e) => {
+
     const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
 
     const item = document.createElement('li');
@@ -18,8 +17,15 @@ const addFormToCollection = (e) => {
     collectionHolder.dataset.index++;
 };
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.add_item_link').forEach(btn => {
-        btn.addEventListener("click", addFormToCollection);
+document
+    .querySelectorAll('.add_item_link')
+    .forEach(btn => {
+        btn.addEventListener("click", addFormToCollection)
     });
-});
+
+
+
+
+
+
+

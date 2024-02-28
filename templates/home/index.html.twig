@@ -4,14 +4,32 @@
 {% block header %} {% endblock %}
 {% block body %}
     <div class="container">
-        <div class="row mt-100">
+        <div class="row mt-100 mb-100">
+            {% include '_partials/_flash.html.twig' %}
+            {% if app.user %}
+                <a class="text-decoration-none ml-3 mb-3 w-100" href="{{ path('app_trick_add') }}">
+                    Ajouter une figure
+                </a>
+            {% endif %}
             {% for trick in tricks %}
                 <div class="card col-lg-4 col-md-6 col-12 border-0">
-                    <img src="{{ asset('assets/empty.png') }}" class="card-img-top" alt="...">
+                    <img src="{{ asset('assets/illustrations/'~trick.firstIllustration.name) }}"
+                         class="card-img-top img-height" alt="empty">
                     <div class="card-body text-center">
-                        <a href="{{ path('app_trick', {'slug': trick.slug }) }}" class="link link-info font-weight-bold">
+                        <a href="{{ path('app_trick', {'slug': trick.slug }) }}"
+                           class=" text-decoration-none font-weight-bolder">
                             {{ trick.name | capitalize }}
                         </a>
+                        {% if app.user is same as(trick.user) %}
+
+                            <a href="{{ path('app_trick_delete', {'id': trick.id }) }}" class="float-right mr-2">
+                                <i class="fa-regular fa-trash-can icon text-danger ml-2"></i>
+                            </a>
+                            <a href="{{ path('app_trick_edit', {'id': trick.id }) }}" class="float-right">
+                                <i class="fa-solid fa-pen-to-square icon"></i>
+                            </a>
+
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

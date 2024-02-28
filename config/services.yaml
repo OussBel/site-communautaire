@@ -26,3 +26,4 @@ services:
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%illustrations_directory%'
+
