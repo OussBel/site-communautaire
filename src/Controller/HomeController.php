@@ -6,19 +6,17 @@ use App\Entity\Comment;
 use App\Entity\Illustrations;
 use App\Entity\Trick;
 use App\Form\CommentType;
-use App\Form\IllustrationsType;
 use App\Form\TrickType;
 use App\Kernel;
 use App\Repository\CommentRepository;
 use App\Repository\IllustrationsRepository;
 use App\Repository\TrickRepository;
-use App\Service\FormHandler;
-use App\Service\TrickFormHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
@@ -44,12 +42,8 @@ class HomeController extends AbstractController
 
 
     #[Route('/figure/{slug}', name: 'app_trick')]
-    public function show(Trick $trick, Request $request, CommentRepository $commentRepository,
-                         IllustrationsRepository $illustrationsRepository): Response
+    public function show(Trick $trick, Request $request, CommentRepository $commentRepository): Response
     {
-
-
-
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
@@ -82,7 +76,7 @@ class HomeController extends AbstractController
 
 
     #[Route('/compte/ajouter-une-figure', name: 'app_trick_add')]
-    public function add(Request $request, TrickFormHandler $trickFormHandler): Response
+    public function add(Request $request): Response
     {
 
         $trick = new Trick();
@@ -93,10 +87,20 @@ class HomeController extends AbstractController
 
         $currentUser = $this->getUser();
 
-        if ($trickFormHandler->handleForm($form, $currentUser)) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->addFlash('success', 'La figure a été ajoutée avec succès');
+            $trick = $form->getData();
 
+            $slugger = new AsciiSlugger();
+
+            $slug = strtolower($slugger->slug($trick->getName()));
+            $trick->setSlug($slug);
+            $trick->setUser($currentUser);
+
+            $this->entityManager->persist($trick);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', message: 'La figure a été créée avec succès');
             return $this->redirectToRoute('app_home');
         }
 
@@ -107,7 +111,6 @@ class HomeController extends AbstractController
     #[Route('/compte/modifier-une-figure/{id<\d+>}', name: 'app_trick_edit')]
     public function edit(Trick                   $trick,
                          Request                 $request,
-                         TrickFormHandler        $trickFormHandler,
                          IllustrationsRepository $illustrationsRepository
     ): Response
     {
@@ -124,13 +127,6 @@ class HomeController extends AbstractController
 
         $currentUser = $this->getUser();
 
-
-        if ($trickFormHandler->handleForm($form, $currentUser)) {
-
-            $this->addFlash('success', 'La figure a été mise à jour avec succès');
-
-            return $this->redirectToRoute('app_home');
-        }
 
         return $this->render('home/form.html.twig',
             [
@@ -153,10 +149,10 @@ class HomeController extends AbstractController
 
         $projectDir = $kernel->getProjectDir();
 
-        foreach($illustrations as $illustration) {
-            $imagePath = $projectDir. '/public/assets/illustrations/' . $illustration->getName();
+        foreach ($illustrations as $illustration) {
+            $imagePath = $projectDir . '/public/assets/illustrations/' . $illustration->getName();
 
-            if(file_exists($imagePath)) {
+            if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
         }

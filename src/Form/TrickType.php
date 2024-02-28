@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Groupe;
+use App\Entity\Illustrations;
 use App\Entity\Trick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -32,6 +33,11 @@ class TrickType extends AbstractType
                 ],
                 'allow_add' => true,
                 'allow_delete' => true,
+                'delete_empty' =>
+                    function (Illustrations $image = null) {
+                        return null === $image || empty($image->getName());
+                    },
+
                 'by_reference' => false,
                 'required' => true,
                 'label' => false,
