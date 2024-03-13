@@ -10,6 +10,10 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class FileUploader
 {
 
+    /**
+     * @param string $targetDirectory
+     * @param SluggerInterface $slugger
+     */
     public function __construct(
         private readonly string           $targetDirectory,
         private readonly SluggerInterface $slugger,
@@ -17,8 +21,13 @@ class FileUploader
     {
     }
 
-    public function upload(UploadedFile $file): string
+    /**
+     * @param UploadedFile $file
+     * @return string|null
+     */
+    public function upload(UploadedFile $file): ?string
     {
+
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
         $filename=  $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
@@ -34,6 +43,9 @@ class FileUploader
     }
 
 
+    /**
+     * @return string
+     */
     public function getTargetDirectory(): string
     {
         return $this->targetDirectory;

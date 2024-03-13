@@ -9,11 +9,20 @@ use Symfony\Component\Mime\Address;
 
 class MailerService
 {
+
+    /**
+     * @param MailerInterface $mailer
+     */
     public function __construct(private readonly MailerInterface $mailer)
     {
     }
 
     /**
+     * @param string $to
+     * @param string $subject
+     * @param string $templateTwig
+     * @param array $context
+     * @return void
      * @throws TransportExceptionInterface
      */
     public function send(string $to, string $subject, string $templateTwig, array $context): void

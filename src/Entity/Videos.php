@@ -15,8 +15,8 @@ class Videos
     #[ORM\Column]
     private ?int $id = null;
 
-
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez ajouter un lien vidéo valide (type intégré)')]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'Videos')]
@@ -35,6 +35,14 @@ class Videos
 
     public function setName(string $name): static
     {
+       // if (preg_match('#https://www\.youtube\.com/embed/([a-zA-Z0-9_=?]+)#', $name, $matches)) {
+        //    $name = "https://www.youtube.com/embed/" . $matches[1];
+       // } elseif (preg_match('#https://www\.dailymotion\.com/embed/video/([^"]+)#', $name, $matches)) {
+       //     $name = "https://www.dailymotion.com/embed/video/" . $matches[1];
+       // } else {
+       //     $name = null;
+       // }
+
         $this->name = $name;
 
         return $this;
