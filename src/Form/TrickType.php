@@ -22,6 +22,7 @@ class TrickType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => false,
+                'empty_data' => '' ,
                 'attr' => [
                     'placeholder' => 'Nom',
                 ],
@@ -33,15 +34,9 @@ class TrickType extends AbstractType
                 ],
                 'allow_add' => true,
                 'allow_delete' => true,
-                'delete_empty' =>
-                    function (Illustrations $image = null) {
-                        return null === $image || empty($image->getName());
-                    },
-
                 'by_reference' => false,
-                'required' => true,
                 'label' => false,
-                'prototype' => true,
+                'mapped' => false
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
@@ -51,12 +46,11 @@ class TrickType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'required' => true,
-                'label' => false,
+                'label' => false
             ])
             ->add('description', TextareaType::class, [
                 'label' => false,
-                'required' => true,
+                'empty_data' => '',
                 'attr' => [
                     'placeholder' => 'Description',
                 ],

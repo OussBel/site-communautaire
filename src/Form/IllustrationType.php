@@ -16,19 +16,16 @@ class IllustrationType extends AbstractType
     {
         $builder
             ->add('file', FileType::class, [
-                'label' => 'Joindre une image',
+                'label' => 'Ajouter une image',
                 'mapped' => true,
                 'required' => true,
                 'constraints' => [
-                    new NotNull(['message' => 'Veuillez télécharger une image.',
-                        'groups' => ['file_upload']
-                    ]),
+                    new NotNull(['message' => 'Veuillez télécharger une image.']),
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => ['image/*'],
                         'mimeTypesMessage' => 'Veuillez télécharger une image valide',
                         'maxSizeMessage' => 'La taille du fichier est grande, veuillez ajouter une image <= 2M',
-                        'groups' => ['file_upload']
                     ]),
                 ],
                 'attr' => [
@@ -41,7 +38,6 @@ class IllustrationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Illustrations::class,
-            //     'validation_groups' => ['Default'],
         ]);
     }
 }

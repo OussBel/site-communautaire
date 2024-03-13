@@ -7,30 +7,27 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+
+#[UniqueEntity('name', message: 'Ce nom existe dèjà, veuillez choisir un autre')]
 class Trick
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(length: 255, unique: true)]
-    #[Assert\NotBlank(message: 'Le nom ne doit pas etre vide')]
-    private ?string $name = null;
-
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: 'La déscription ne doit pas être vide')]
     #[Assert\NotNull(message: 'La déscription ne doit pas être vide')]
-    private ?string $description = null;
+    private string $description = '';
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -58,6 +55,10 @@ class Trick
     #[Assert\Valid]
     private Collection $Videos;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom de la figure est obligatoire')]
+    private string $name = '';
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -71,17 +72,6 @@ class Trick
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     public function getSlug(): ?string
     {
@@ -265,6 +255,18 @@ class Trick
                 $video->setTrick(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
