@@ -4,14 +4,14 @@
 {% block header %} {% endblock %}
 {% block body %}
     <div class="container">
-        <div class="row mt-100 mb-100">
+        <div class="row mt-100 mb-5">
             {% include '_partials/_flash.html.twig' %}
             {% if app.user %}
                 <a class="text-decoration-none ml-3 mb-3 w-100" href="{{ path('app_trick_add') }}">
                     Ajouter une figure
                 </a>
             {% endif %}
-            {% for trick in tricks|slice(0, 5) %}
+            {% for trick in tricks %}
                 <div class="card col-lg-4 col-md-6 col-12 border-0">
                     <img src="{{ asset('assets/illustrations/'~trick.firstImage.name) }}"
                          class="card-img-top img-height" alt="empty">
@@ -35,12 +35,12 @@
                 </div>
             {% endfor %}
         </div>
-        <div id="loadMoreContainer">
-            <button id="loadMoreButton" class="btn btn-primary">Load More</button>
+
+        <div class="text-center">
+            <button id="loadMoreButton" class="btn btn-primary">Télécharger plus</button>
         </div>
     </div>
 
-    <script>
+    <script src="{{ asset('js/loadMore.js') }}"></script>
 
-    </script>
 {% endblock %}
