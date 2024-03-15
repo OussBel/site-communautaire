@@ -2,37 +2,36 @@
 
 namespace App\Repository;
 
-use App\Entity\Illustrations;
+use App\Entity\Images;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Illustrations>
+ * @extends ServiceEntityRepository<Images>
  *
- * @method Illustrations|null find($id, $lockMode = null, $lockVersion = null)
- * @method Illustrations|null findOneBy(array $criteria, array $orderBy = null)
- * @method Illustrations[]    findAll()
- * @method Illustrations[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Images|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Images|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Images[]    findAll()
+ * @method Images[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class IllustrationsRepository extends ServiceEntityRepository
+class ImagesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Illustrations::class);
+        parent::__construct($registry, Images::class);
     }
 
-
-    public function illustrationsByTrickId($trick) {
+    public function imagesByTrickId($trick) {
         return $this->createQueryBuilder('i')
             ->andWhere('i.trick = :trick')
             ->setParameter('trick', $trick)
             ->getQuery()
             ->getResult();
-
     }
 
+
 //    /**
-//     * @return Illustrations[] Returns an array of Illustrations objects
+//     * @return Images[] Returns an array of Images objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -46,7 +45,7 @@ class IllustrationsRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Illustrations
+//    public function findOneBySomeField($value): ?Images
 //    {
 //        return $this->createQueryBuilder('i')
 //            ->andWhere('i.exampleField = :val')

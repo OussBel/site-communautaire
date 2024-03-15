@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Illustrations;
+use App\Entity\Images;
 use App\Entity\Trick;
 use App\Kernel;
-use App\Repository\IllustrationsRepository;
+use App\Repository\ImagesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,62 +15,63 @@ class TrickService
 {
 
     public function __construct(
-       private readonly EntityManagerInterface $entityManager,
-       private readonly SluggerInterface       $slugger,
-       private readonly FileUploader           $fileUploader,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SluggerInterface       $slugger,
+        private readonly FileUploader           $fileUploader,
         private readonly Kernel                $kernel
     ) {
 
     }
 
-    public function createTrick(FormInterface $form, Trick $trick, UserInterface $currentUser): void
+    public function addImage(FormInterface $form, Trick $trick, UserInterface $currentUser): void
     {
-        $slug = strtolower($this->slugger->slug($trick->getName()));
+        $name = $trick->getName();
+        $slug = strtolower($this->slugger->slug($name));
         $trick->setSlug($slug);
         $trick->setUser($currentUser);
 
-        $illustrations = $form->get('illustrations')->getData();
+        $images = $form->get('images')->getData();
 
-        foreach ($illustrations as $illustration) {
-            $this->processIllustration($illustration, $trick);
+        foreach ($images as $image) {
+            $this->processImage($image, $trick);
         }
 
         $this->entityManager->persist($trick);
         $this->entityManager->flush();
     }
 
-    public function editTrick(array $files, Trick $trick, IllustrationsRepository $illustrationsRepository): void
+    private function processImage(Images $image, Trick $trick): void
+    {
+        $uploadedImage = $image->getFile();
+        $fileName = $this->fileUploader->upload($uploadedImage);
+        $image->setName($fileName);
+        $image->setTrick($trick);
+
+        $this->entityManager->persist($image);
+    }
+
+    public function editExistingImage(array $files, Trick $trick, ImagesRepository $imagesRepository): void
     {
         foreach ($files as $key => $value) {
             $imageId = str_replace('image_', '', $key);
-            $image = $illustrationsRepository->find($imageId);
+            $image = $imagesRepository->find($imageId);
 
             $this->entityManager->remove($image);
             $this->removeImage($image);
 
             $fileName = $this->fileUploader->upload($value);
 
-            $illustration = new Illustrations();
-            $illustration->setName($fileName);
-            $illustration->setTrick($trick);
+            $image = new Images();
+            $image->setName($fileName);
+            $image->setTrick($trick);
 
-            $this->entityManager->persist($illustration);
+            $this->entityManager->persist($image);
         }
 
         $this->entityManager->flush();
     }
 
-    private function processIllustration(Illustrations $illustration, Trick $trick): void
-    {
-        $image = $illustration->getFile();
-        $fileName = $this->fileUploader->upload($image);
-        $illustration->setName($fileName);
-        $illustration->setTrick($trick);
-
-        $this->entityManager->persist($illustration);
-    }
-
-    public function removeImage(Illustrations $image): void
+    public function removeImage(Images $image): void
     {
         $projectDir = $this->kernel->getProjectDir();
 

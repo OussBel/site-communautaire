@@ -3,31 +3,30 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Illustrations;
+use App\Entity\Images;
 use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
-use App\Repository\IllustrationsRepository;
+use App\Repository\ImagesRepository;
 use App\Repository\TrickRepository;
-use App\Service\FileUploader;
 use App\Service\TrickService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 
 class HomeController extends AbstractController
 {
     /**
      * @param EntityManagerInterface $entityManager
-     * @param FileUploader $fileUploader
-     * @param TrickService $trickService
      */
     public function __construct(private readonly EntityManagerInterface $entityManager,
-                                private readonly FileUploader           $fileUploader,
+                                private readonly SluggerInterface       $slugger,
                                 private readonly TrickService           $trickService
     )
     {
@@ -80,8 +79,7 @@ class HomeController extends AbstractController
             'trick' => $trick,
             'form' => $form,
             'comments' => $comments,
-            'page' => $page,
-            'firstIllustration' => $trick->getFirstIllustration()
+            'page' => $page
         ]);
     }
 
@@ -100,7 +98,10 @@ class HomeController extends AbstractController
         $currentUser = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->trickService->createTrick($form, $trick, $currentUser);
+            $this->trickService->addImage($form, $trick, $currentUser);
+
+            $this->entityManager->persist($trick);
+            $this->entityManager->flush();
 
             $this->addFlash('success', message: 'La figure a été créée avec succès');
             return $this->redirectToRoute('app_home');
@@ -113,34 +114,28 @@ class HomeController extends AbstractController
     /**
      * @param Trick $trick
      * @param Request $request
-     * @param IllustrationsRepository $illustrationsRepository
      * @return Response
      */
     #[Route('/compte/modifier-une-figure/{id<\d+>}', name: 'app_trick_edit', methods: ['GET', 'POST'])]
-    public function edit(Trick                   $trick,
-                         Request                 $request,
-                         IllustrationsRepository $illustrationsRepository
-    ): Response
+    public function edit(Trick $trick, Request $request, ImagesRepository $imagesRepository): Response
     {
-
         if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
 
-        $uploadedIllustrations = $illustrationsRepository->illustrationsByTrickId($trick);
+        $uploadedImages = $imagesRepository->imagesByTrickId($trick);
 
         $currentUser = $this->getUser();
 
         $form = $this->createForm(TrickType::class, $trick);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $files = array_filter($request->files->all());
-
             unset($files['trick']);
 
-            $this->trickService->createTrick($form, $trick, $currentUser);
-            $this->trickService->editTrick($files, $trick, $illustrationsRepository);
+            $this->trickService->addImage($form, $trick, $currentUser);
+            $this->trickService->editExistingImage($files, $trick, $imagesRepository);
+
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('app_home');
         }
@@ -148,7 +143,7 @@ class HomeController extends AbstractController
         return $this->render('home/form.html.twig',
             [
                 'form' => $form,
-                'uploadedIllustrations' => $uploadedIllustrations
+                'uploadedImages' => $uploadedImages
             ]);
 
     }
@@ -162,13 +157,13 @@ class HomeController extends AbstractController
     {
         if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
 
-        $illustrations = $trick->getIllustrations();
+        $images = $trick->getImages();
 
         $this->entityManager->remove($trick);
         $this->entityManager->flush();
 
-        foreach ($illustrations as $illustration) {
-            $this->trickService->removeImage($illustration);
+        foreach ($images as $image) {
+            $this->trickService->removeImage($image);
         }
 
         $this->addFlash('success', 'La figure a été supprimée avec succès');
@@ -176,22 +171,17 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    /**
-     * @param Illustrations $illustrations
-     * @return Response
-     */
-    #[Route('/compte/supprimer-une-image/{id<\d+>}', name: 'app_illustration_delete', methods: ['GET', 'DELETE'])]
-    public function deleteIllustration(Illustrations $illustrations): Response
+    #[Route('/compte/supprimer-une-image/{id<\d+>}', name: 'app_image_delete', methods: ['GET', 'DELETE'])]
+    public function deleteImage(Images $image): Response
     {
 
-        $trick = $illustrations->getTrick();
+        $trick = $image->getTrick();
         $trickId = $trick->getId();
-        $trick->removeIllustration($illustrations);
 
-        $this->entityManager->remove($illustrations);
+        $this->entityManager->remove($image);
         $this->entityManager->flush();
 
-        $this->trickService->removeImage($illustrations);
+        $this->trickService->removeImage($image);
 
         return $this->redirectToRoute('app_trick_edit', ['id' => $trickId]);
     }

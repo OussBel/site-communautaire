@@ -6,7 +6,6 @@ use App\Repository\VideosRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ORM\Entity(repositoryClass: VideosRepository::class)]
 class Videos
 {
@@ -16,10 +15,10 @@ class Videos
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Veuillez ajouter un lien vidéo valide (type intégré)')]
+    #[Assert\NotBlank(message: 'Veuillez ajouter un lien video valide (lien intégré)')]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Videos')]
+    #[ORM\ManyToOne(inversedBy: 'videos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trick $trick = null;
 
@@ -35,13 +34,13 @@ class Videos
 
     public function setName(string $name): static
     {
-       // if (preg_match('#https://www\.youtube\.com/embed/([a-zA-Z0-9_=?]+)#', $name, $matches)) {
-        //    $name = "https://www.youtube.com/embed/" . $matches[1];
-       // } elseif (preg_match('#https://www\.dailymotion\.com/embed/video/([^"]+)#', $name, $matches)) {
-       //     $name = "https://www.dailymotion.com/embed/video/" . $matches[1];
-       // } else {
-       //     $name = null;
-       // }
+        if (preg_match('#https://www\.youtube\.com/embed/([a-zA-Z0-9_=?]+)#', $name, $matches)) {
+            $name = "https://www.youtube.com/embed/" . $matches[1];
+        } elseif (preg_match('#https://www\.dailymotion\.com/embed/video/([^"]+)#', $name, $matches)) {
+            $name = "https://www.dailymotion.com/embed/video/" . $matches[1];
+        } else {
+            $name = null;
+        }
 
         $this->name = $name;
 

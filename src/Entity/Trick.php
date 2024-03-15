@@ -47,26 +47,26 @@ class Trick
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Illustrations::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Assert\Valid]
-    private Collection $Illustrations;
-
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Videos::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Assert\Valid]
-    private Collection $Videos;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Le nom de la figure est obligatoire')]
     private string $name = '';
 
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Images::class, orphanRemoval: true)]
+    #[Assert\Valid]
+    private Collection $images;
+
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Videos::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Assert\Valid]
+    private Collection $videos;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->comments = new ArrayCollection();
-        $this->Illustrations = new ArrayCollection();
-        $this->Videos = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -183,47 +183,57 @@ class Trick
         return $this;
     }
 
-    /**
-     * @return Collection<int, Illustrations>
-     */
-    public function getIllustrations(): Collection
+    public function getName(): string
     {
-        return $this->Illustrations;
+        return $this->name;
     }
 
-    public function addIllustration(Illustrations $illustration): static
+    public function setName(string $name): static
     {
-        if (!$this->Illustrations->contains($illustration)) {
-            $this->Illustrations->add($illustration);
-            $illustration->setTrick($this);
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Images>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Images $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setTrick($this);
         }
 
         return $this;
     }
 
-    public function getFirstIllustration(): Illustrations
+    public function getFirstImage(): Images
     {
-        $firstIllustration = $this->Illustrations->first();
+        $firstImage = $this->images->first();
 
-        if (!$firstIllustration) {
-            $firstIllustration = new Illustrations();
-            $firstIllustration->setName('empty.png');
-            $firstIllustration->setTrick($this);
-            $this->Illustrations->add($firstIllustration);
+        if (!$firstImage) {
+            $firstImage = new Images();
+            $firstImage->setName('empty.png');
+            $firstImage->setTrick($this);
+            $this->images->add($firstImage);
         }
 
-        return $firstIllustration;
+        return $firstImage;
     }
 
-
-    public function removeIllustration(Illustrations $illustration): static
+    public function removeImage(Images $image): static
     {
-        if ($this->Illustrations->removeElement($illustration)) {
+        if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)
-            if ($illustration->getTrick() === $this) {
-                $illustration->setTrick(null);
+            if ($image->getTrick() === $this) {
+                $image->setTrick(null);
             }
-            $this->modifiedAt = new \DateTime('now');
         }
 
         return $this;
@@ -234,13 +244,13 @@ class Trick
      */
     public function getVideos(): Collection
     {
-        return $this->Videos;
+        return $this->videos;
     }
 
     public function addVideo(Videos $video): static
     {
-        if (!$this->Videos->contains($video)) {
-            $this->Videos->add($video);
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
             $video->setTrick($this);
         }
 
@@ -249,24 +259,12 @@ class Trick
 
     public function removeVideo(Videos $video): static
     {
-        if ($this->Videos->removeElement($video)) {
+        if ($this->videos->removeElement($video)) {
             // set the owning side to null (unless already changed)
             if ($video->getTrick() === $this) {
                 $video->setTrick(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
 
         return $this;
     }

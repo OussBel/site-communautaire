@@ -2,42 +2,39 @@
 
 namespace App\Form;
 
-use App\Entity\Illustrations;
+use App\Entity\Images;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class IllustrationType extends AbstractType
+class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('file', FileType::class, [
-                'label' => 'Ajouter une image',
+                'label' => false,
                 'mapped' => true,
-                'required' => true,
                 'constraints' => [
-                    new NotNull(['message' => 'Veuillez télécharger une image.']),
                     new File([
                         'maxSize' => '2M',
+                        'maxSizeMessage' => "L'image ne doit pas etre > 2M",
                         'mimeTypes' => ['image/*'],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide',
-                        'maxSizeMessage' => 'La taille du fichier est grande, veuillez ajouter une image <= 2M',
+                        'mimeTypesMessage' => "Veuillez ajouter un type d'image valide"
                     ]),
-                ],
-                'attr' => [
-                    'accept' => 'image/*',
+                    new NotBlank(message: 'Veuillez ajouter une image')
                 ]
-            ]);;
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Illustrations::class,
+            'data_class' => Images::class,
         ]);
     }
 }

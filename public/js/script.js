@@ -1,3 +1,9 @@
+document
+    .querySelectorAll('.add_item_link')
+    .forEach(btn => {
+        btn.addEventListener("click", addFormToCollection)
+    });
+
 function addFormToCollection(e) {
     const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
 
@@ -17,23 +23,12 @@ function addFormToCollection(e) {
 
     collectionHolder.dataset.index++;
 
-    addTagFormDeleteLink(item)
+    addTagFormDeleteLink(item);
+
 };
 
-
-document
-    .querySelectorAll('.add_item_link')
-    .forEach(btn => {
-        btn.addEventListener("click", addFormToCollection)
-    });
-
-document
-    .querySelectorAll('ul.tags li')
-    .forEach((tag) => {
-        addTagFormDeleteLink(tag)
-    })
-
 function addTagFormDeleteLink(item) {
+
     const removeFormButton = document.createElement('button');
 
     // Create an <i> element with FontAwesome classes
@@ -56,6 +51,27 @@ function addTagFormDeleteLink(item) {
     });
 }
 
+document
+    .querySelectorAll('ul.images li')
+    .forEach((tag) => {
+        addTagFormDeleteLink(tag)
+    })
 
 
 
+// Get all elements with the class 'js-remove-item'
+const removeButtons = document.querySelectorAll('.js-remove-item');
+
+// Loop through each remove button and attach a click event listener
+removeButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+        // Get the parent element (the div with class 'js-item') of the clicked button
+        const parentDiv = button.closest('.js-item');
+
+        // Check if the parent div exists
+        if (parentDiv) {
+            // Remove the parent div from the DOM
+            parentDiv.remove();
+        }
+    });
+});

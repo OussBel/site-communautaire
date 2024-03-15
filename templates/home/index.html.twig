@@ -11,9 +11,9 @@
                     Ajouter une figure
                 </a>
             {% endif %}
-            {% for trick in tricks %}
+            {% for trick in tricks|slice(0, 5) %}
                 <div class="card col-lg-4 col-md-6 col-12 border-0">
-                    <img src="{{ asset('assets/illustrations/'~trick.firstIllustration.name) }}"
+                    <img src="{{ asset('assets/illustrations/'~trick.firstImage.name) }}"
                          class="card-img-top img-height" alt="empty">
                     <div class="card-body text-center">
                         <a href="{{ path('app_trick', {'slug': trick.slug }) }}"
@@ -30,9 +30,17 @@
                             </a>
 
                         {% endif %}
+
                     </div>
                 </div>
             {% endfor %}
         </div>
+        <div id="loadMoreContainer">
+            <button id="loadMoreButton" class="btn btn-primary">Load More</button>
+        </div>
     </div>
+
+    <script>
+
+    </script>
 {% endblock %}
