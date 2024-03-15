@@ -6,14 +6,14 @@
 
     <div class="container mt-300">
         <h2 class="mt-200 mb-5 text-center text-info">{{ trick.name | capitalize }}</h2>
-        <img src="{{ asset('assets/illustrations/'~firstIllustration.name) }}" style="width: 100%">
+        <img src="{{ asset('assets/illustrations/'~trick.firstImage.name) }}" style="width: 100%">
 
         <div class="row mt-5">
-            {% for illustration in trick.illustrations %}
+            {% for image in trick.images %}
                 {% if loop.index > 1 %}
                     <div class="col-md-12 col-lg-6 mb-4">
-                        <img src="{{ asset("assets/illustrations/"~illustration.name) }}"
-                             class="card-img-top rounded" alt="{{ illustration.name }}">
+                        <img src="{{ asset("assets/illustrations/"~image.name) }}"
+                             class="card-img-top rounded" alt="{{ image.name }}" style="height: 350px">
                     </div>
                 {% endif %}
             {% endfor %}
@@ -27,6 +27,7 @@
                 </div>
             {% endfor %}
         </div>
+
         <p class="mt-4">{{ trick.description }}</p>
         <div class="mb-3 mt-5"><strong>Auteur: </strong>{{ trick.user.name }}</div>
         <div class="d-flex flex-column flex-md-row justify-content-between mb-5">

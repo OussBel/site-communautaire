@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Groupe;
-use App\Entity\Illustrations;
 use App\Entity\Trick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -27,33 +26,29 @@ class TrickType extends AbstractType
                     'placeholder' => 'Nom',
                 ],
             ])
-            ->add('illustrations', CollectionType::class, [
-                'entry_type' => IllustrationType::class,
-                'entry_options' => [
-                    'label' => false
-                ],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'label' => false,
-                'mapped' => false
-            ])
-            ->add('videos', CollectionType::class, [
-                'entry_type' => VideoType::class,
-                'entry_options' => [
-                    'label' => false
-                ],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'label' => false
-            ])
             ->add('description', TextareaType::class, [
                 'label' => false,
                 'empty_data' => '',
                 'attr' => [
                     'placeholder' => 'Description',
                 ],
+            ])
+            ->add('images', CollectionType::class, [
+                'label' => false,
+                'mapped' => false,
+                'entry_type' => ImageType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ])
+            ->add('videos', CollectionType::class, [
+                'label' => false,
+                'entry_type' => VideoType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
             ])
             ->add('groupe', EntityType::class, [
                 'label' => 'Groupe',

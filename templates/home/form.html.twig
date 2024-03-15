@@ -11,29 +11,29 @@
         </div>
         <div class="form-group mb-4">
             {{ form_label(form.description) }}
+            {{ form_widget(form.description,  {'attr': {'style': 'height: 200px;'}}) }}
             {{ form_errors(form.description) }}
-            {{ form_widget(form.description) }}
-
         </div>
         <div class="form-group mb-4">
             {{ form_label(form.groupe) }} :
-            {{ form_widget(form.groupe) }}
+            {{ form_widget(form.groupe, {'attr': {'class': 'form-control'}}) }}
         </div>
+
 
         {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
             <div class="row">
-                {% for uploadedIllustration in uploadedIllustrations %}
+                {% for uploadedImage in uploadedImages %}
                     <div class="col-12 col-lg-6 mb-4 box-img">
-                        <img src="{{ asset('assets/illustrations/'~uploadedIllustration.name) }}"
+                        <img src="{{ asset('assets/illustrations/'~uploadedImage.name) }}"
                              class="d-block w-100 h-100 object-fit-cover rounded">
 
-                        <a href="{{ path('app_illustration_delete', {'id': uploadedIllustration.id }) }}"
+                        <a href="{{ path('app_image_delete', {'id': uploadedImage.id }) }}"
                            class="js-remove-item x-icon">
                             <i class="fa-regular fa-trash-can text-danger"></i>
                         </a>
                         <label>
-                            <input type="file" name="image_{{ uploadedIllustration.id }}"
-                                   id="{{ uploadedIllustration.id }}" accept="image/*" style="display: none">
+                            <input type="file" name="image_{{ uploadedImage.id }}"
+                                   id="{{ uploadedImage.id }}" accept="image/*" style="display: none">
                             <i class="fa-solid fa-pen-to-square icon text-primary pen-icon"></i>
                         </label>
                     </div>
@@ -42,45 +42,54 @@
 
         {% endif %}
 
-        <ul class="tags"
-            data-index="{{ form.illustrations|length > 0 ? form.illustrations|last.vars.name + 1 : 0 }}"
-            data-prototype="{{ form_widget(form.illustrations.vars.prototype)|e('html_attr') }}">
+        {% for image in form.images %}
+            <div class="form-group mb-4">
+                {{ form_label(image.file) }}
+                {{ form_errors(image.file) }}
+                {{ form_widget(image.file) }}
+            </div>
+        {% endfor %}
+
+        {# Ajout des inputs dynamique type file  #}
+
+        <ul class="images"
+            data-index="{{ form.images|length > 0 ? form.images|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"
+        >
         </ul>
-        <button type="button" class="add_item_link btn btn-link text-decoration-none mb-3  d-block"
-                data-collection-holder-class="tags">Ajouter une image
+
+        <button type="button" class="add_item_link btn btn-link text-decoration-none mb-3"
+                data-collection-holder-class="images">Ajouter une image
         </button>
-        <div class="mt-3">
-            <ul class="js-wrapper js-videos list-unstyled"
-                data-index="{{ form.videos|length > 0 ? form.videos|last.vars.name + 1 : 0 }}"
-                data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}">
 
-                {% for video in form.videos %}
-                    <div class="position-relative js-item mt-5">
-                        <iframe class="w-100 rounded" height="450" src="{{ video.vars.value.name }}"
-                                allowfullscreen></iframe>
-                        <a class="js-remove-item x-icon cursor-pointer">
-                            <i class="fa-regular fa-trash-can text-danger"></i>
-                        </a>
-                        <li class="list-unstyled">
-                            {{ form_row(video.name) }}
-                        </li>
-                    </div>
-                {% endfor %}
+        {# Ajout des inputs videos dynamiques  #}
 
-            </ul>
+        <ul class="videos"
+            data-index="{{ form.videos|length > 0 ? form.videos|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}"
+        >
+            {% for video in form.videos %}
+                <div class="position-relative js-item mt-5">
+                    <iframe class="w-100 rounded" height="450" src="{{ video.vars.value.name }}"
+                            allowfullscreen></iframe>
+                    <a class="js-remove-item x-icon cursor-pointer">
+                        <i class="fa-regular fa-trash-can text-danger"></i>
+                    </a>
+                    <li class="list-unstyled">
+                        {{ form_row(video.name) }}
+                    </li>
+                </div>
+            {% endfor %}
 
+        </ul>
 
-            <button type="button" class="add_item_link btn btn-link text-decoration-none mb-3"
-                    data-collection-holder-class="js-videos">
-                Ajouter une video
-            </button>
-        </div>
-
+        <button type="button" class="add_item_link btn btn-link text-decoration-none mt-3 mb-3"
+                data-collection-holder-class="videos">Ajouter une video
+        </button>
 
         {{ form_end(form) }}
     </div>
-
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
 
 
 {% endblock %}
