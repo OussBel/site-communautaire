@@ -22,7 +22,12 @@ class ImagesRepository extends ServiceEntityRepository
         parent::__construct($registry, Images::class);
     }
 
-    public function imagesByTrickId(Trick  $trick) {
+    /**
+     * @param Trick $trick
+     * @return float|int|mixed|string
+     */
+    public function imagesByTrickId(Trick $trick): mixed
+    {
         return $this->createQueryBuilder('i')
             ->andWhere('i.trick = :trick')
             ->setParameter('trick', $trick)
