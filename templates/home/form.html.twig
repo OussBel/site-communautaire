@@ -5,6 +5,8 @@
 {% block body %}
 
     <div class="container mt-200 form-width">
+        {% include '_partials/_flash.html.twig' %}
+
         {{ form_start(form,  {'attr': {'novalidate': 'novalidate'}}) }}
         <div class="form-group mb-4">
             {{ form_row(form.name) }}

@@ -25,7 +25,8 @@ public function __construct(private readonly UserPasswordHasherInterface $hasher
             $user->setName($faker->name())
                 ->setEmail($faker->unique()->email())
                 ->setImage('empty.png')
-                ->setIsVerified(true);
+                ->setIsVerified(true)
+                ->setRoles(['ROLE_USER']);
 
             $password = $this->hasher->hashPassword($user, 'pass_1234');
             $user->setPassword($password);

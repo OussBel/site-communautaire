@@ -24,6 +24,8 @@ class HomeController extends AbstractController
 {
     /**
      * @param EntityManagerInterface $entityManager
+     * @param SluggerInterface $slugger
+     * @param TrickService $trickService
      */
     public function __construct(private readonly EntityManagerInterface $entityManager,
                                 private readonly SluggerInterface       $slugger,
@@ -114,6 +116,7 @@ class HomeController extends AbstractController
     /**
      * @param Trick $trick
      * @param Request $request
+     * @param ImagesRepository $imagesRepository
      * @return Response
      */
     #[Route('/compte/modifier-une-figure/{id<\d+>}', name: 'app_trick_edit', methods: ['GET', 'POST'])]
@@ -137,6 +140,7 @@ class HomeController extends AbstractController
 
             $this->entityManager->flush();
 
+            $this->addFlash('success', message: 'La figure a été mise à jour avec succès');
             return $this->redirectToRoute('app_home');
         }
 
@@ -167,7 +171,6 @@ class HomeController extends AbstractController
         }
 
         $this->addFlash('success', 'La figure a été supprimée avec succès');
-
         return $this->redirectToRoute('app_home');
     }
 
@@ -183,6 +186,7 @@ class HomeController extends AbstractController
 
         $this->trickService->removeImage($image);
 
+        $this->addFlash('success', message: "L'image a été supprimée avec succès");
         return $this->redirectToRoute('app_trick_edit', ['id' => $trickId]);
     }
 

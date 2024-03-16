@@ -8,7 +8,7 @@ security:
     app_user_provider:
       entity:
         class: App\Entity\User
-        property: email
+        property: name
     # used to reload user from session & other features (e.g. switch_user)
     # used to reload user from session & other features (e.g. switch_user)
     # used to reload user from session & other features (e.g. switch_user)
@@ -23,7 +23,7 @@ security:
       provider: app_user_provider
       user_checker: App\Security\UserConfirmation
 
-        # Define the entry point for the firewall
+      # Define the entry point for the firewall
       entry_point: form_login
 
       form_login:

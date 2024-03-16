@@ -1,7 +1,16 @@
 {% for label, messages in app.flashes %}
     {% for message in messages %}
-        <div class="alert alert-{{label}} w-100 text-center">
+        <div class="alert alert-{{ label }} w-100 text-center flash-message">
             {{ message|raw }}
         </div>
     {% endfor %}
 {% endfor %}
+<script>
+    // Auto-dismiss flash messages after 5 seconds
+    setTimeout(function() {
+        let flashMessages = document.querySelectorAll('.flash-message');
+        for (let i = 0; i < flashMessages.length; i++) {
+            flashMessages[i].remove();
+        }
+    }, 5000);
+</script>
