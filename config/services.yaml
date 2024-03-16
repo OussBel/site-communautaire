@@ -28,5 +28,3 @@ services:
             $targetDirectory: '%illustrations_directory%'
 
 
-   
-
