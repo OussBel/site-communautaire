@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Groupe;
 use App\Entity\Trick;
 use App\Entity\User;
@@ -26,7 +27,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         $groups = $manager->getRepository(Groupe::class)->findAll();
 
         foreach ($users as $user) {
-            for ($i = 0; $i < 7; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 $trick = new Trick();
                 $trick->setName($faker->unique()->word());
                 $slug = strtolower($this->slugger->slug($trick->getName()));
@@ -34,7 +35,17 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
 
                 $randomGroupId = array_rand($groups);
                 $randomGroupValue = $groups[$randomGroupId];
+
                 $trick->setUser($user)->setGroupe($randomGroupValue);
+
+                for($j = 0; $j < 25; $j++) {
+                    $comment = new Comment();
+                    $comment->setAuthor($user);
+                    $comment->setTrick($trick);
+                    $comment->setContent($faker->paragraph());
+
+                    $manager->persist($comment);
+                }
 
                 $manager->persist($trick);
             }

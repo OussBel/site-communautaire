@@ -109,6 +109,28 @@ body {
     font-size: 20px;
 }
 
+.up {
+    position: fixed;
+    right: -30%;
+    bottom: 5%;
+    cursor: pointer;
+    font-size: xxx-large;
+    transition: .2s ;
+}
+
+.up.display {
+    right: 5%;
+}
+
+.load-more {
+    font-size: xxx-large;
+    cursor: pointer;
+}
+
+.form-width {
+    width: 50%;
+}
+
 @media (max-width: 768px) {
     .bg-img {
         height: 70vh;

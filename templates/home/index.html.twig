@@ -3,8 +3,9 @@
 {% block title %}Snowtricks{% endblock %}
 {% block header %} {% endblock %}
 {% block body %}
+    <span class="up text-primary"><i class="fa-solid fa-circle-arrow-up"></i></span>
     <div class="container">
-        <div class="row mt-100 mb-5">
+        <div class="tricks row mt-100 mb-5">
             {% include '_partials/_flash.html.twig' %}
             {% if app.user %}
                 <a class="text-decoration-none ml-3 mb-3 w-100" href="{{ path('app_trick_add') }}">
@@ -37,10 +38,15 @@
         </div>
 
         <div class="text-center">
-            <button id="loadMoreButton" class="btn btn-primary">Télécharger plus</button>
+                <i id="loadMoreButton" class="fa-solid fa-circle-plus text-primary load-more"></i>
         </div>
     </div>
 
     <script src="{{ asset('js/loadMore.js') }}"></script>
+
+    <script src="{{ asset('js/scrollToTop.js') }}">
+
+    </script>
+
 
 {% endblock %}
