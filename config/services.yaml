@@ -30,4 +30,5 @@ services:
     App\Kernel:
         arguments:
             $environment: 'dev'
+            $debug: '%kernel.debug%
 
