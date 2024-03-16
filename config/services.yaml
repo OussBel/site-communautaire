@@ -26,3 +26,8 @@ services:
         arguments:
             $targetDirectory: '%illustrations_directory%'
 
+
+    App\Kernel:
+        arguments:
+            $environment: 'dev'
+
