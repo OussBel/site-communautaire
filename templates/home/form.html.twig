@@ -71,7 +71,7 @@
             data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}"
         >
             {% for video in form.videos %}
-                <div class="position-relative js-item mt-5">
+                <div class="position-relative js-item mt-3">
                     <iframe class="w-100 rounded" height="450" src="{{ video.vars.value.name }}"
                             allowfullscreen></iframe>
                     <a class="js-remove-item x-icon cursor-pointer">
@@ -85,7 +85,7 @@
 
         </ul>
 
-        <button type="button" class="add_item_link btn btn-link text-decoration-none mt-3 mb-3"
+        <button type="button" class="add_item_link btn btn-link text-decoration-none mb-3"
                 data-collection-holder-class="videos">Ajouter une video
         </button>
 
