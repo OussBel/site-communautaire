@@ -31,11 +31,11 @@ Pour installer ce projet, il faut tout d'abord installer:
 
   1- Clonez le projet en local.
 
-  2- Dans le terminal de votre éditeur, Exécuter la commande : ```bash composer install ```  pour installer les dépendances du projet (vendor, ..etc).
+  2- Dans le terminal de votre éditeur, Exécuter la commande : ``` composer install ```  pour installer les dépendances du projet (vendor, ..etc).
 
   3- Créez une copié du fichier .env et nommez le .env.local
 
-  4- Dans le fichier .env.local, renseignez les données de la base de données: ```bash DATABASE_URL="mysql://user:password@127.0.0.1.3306/dbname?charset=utf8mb4" ```.
+  4- Dans le fichier .env.local, renseignez les données de la base de données: ``` DATABASE_URL="mysql://user:password@127.0.0.1.3306/dbname?charset=utf8mb4" ```.
 
   5- Créez la base de données avec la commande: symfony console doctrine:database:create
 
