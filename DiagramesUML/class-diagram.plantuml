@@ -1,0 +1,140 @@
+@startuml
+
+package "App\Entity" {
+    class Trick {
+        - id
+        - slug
+        - description
+        - createdAt
+        - modifiedAt
+        - groupe
+        - user
+        - comments
+        - name
+        - images
+        - videos
+        + __construct()
+        + getId()
+        + getSlug()
+        + setSlug(slug)
+        + getDescription()
+        + setDescription(description)
+        + getCreatedAt()
+        + setCreatedAt(createdAt)
+        + getModifiedAt()
+        + setModifiedAt(modifiedAt)
+        + getGroupe()
+        + setGroupe(groupe)
+        + getUser()
+        + setUser(user)
+        + getComments()
+        + addComment(comment)
+        + removeComment(comment)
+        + getName()
+        + setName(name)
+        + getImages()
+        + addImage(image)
+        + getFirstImage()
+        + removeImage(image)
+        + getVideos()
+        + addVideo(video)
+        + removeVideo(video)
+    }
+
+    class User {
+        - id
+        - email
+        - roles
+        - password
+        - name
+        - image
+        - isVerified
+        - createdAt
+        - tokenRegistration
+        - tokenRegistrationLifeTime
+        - tricks
+        - comments
+        - resetToken
+        + __construct()
+        + getId()
+        + getEmail()
+        + setEmail(email)
+        + getUserIdentifier()
+        + getRoles()
+        + setRoles(roles)
+        + getPassword()
+        + setPassword(password)
+        + eraseCredentials()
+        + getName()
+        + setName(name)
+        + getImage()
+        + setImage(image)
+        + isIsVerified()
+        + setIsVerified(isVerified)
+        + getCreatedAt()
+        + setCreatedAt(createdAt)
+        + getTokenRegistration()
+        + setTokenRegistration(tokenRegistration)
+        + getTokenRegistrationLifeTime()
+        + setTokenRegistrationLifeTime(tokenRegistrationLifeTime)
+        + getTricks()
+        + addTrick(trick)
+        + removeTrick(trick)
+        + getComments()
+        + addComment(comment)
+        + removeComment(comment)
+        + getResetToken()
+        + setResetToken(resetToken)
+    }
+
+    class Comment {
+        - id
+        - content
+        - author
+        - trick
+        - createdAt
+        + __construct()
+        + getId()
+        + getContent()
+        + setContent(content)
+        + getAuthor()
+        + setAuthor(author)
+        + getTrick()
+        + setTrick(trick)
+        + getCreatedAt()
+        + setCreatedAt(createdAt)
+    }
+
+    class Images {
+        - id
+        - name
+        - file
+        - trick
+        + getId()
+        + getName()
+        + setName(name)
+        + getTrick()
+        + setTrick(trick)
+        + getFile()
+        + setFile(file)
+    }
+
+    class Videos {
+        - id
+        - name
+        - trick
+        + getId()
+        + getName()
+        + setName(name)
+        + getTrick()
+        + setTrick(trick)
+    }
+}
+
+Trick "1" *-- "0..*" Images
+Trick "1" *-- "0..*" Videos
+User "1" *-- "0..*" Trick
+User "1" *-- "0..*" Comment
+Trick "1" *-- "0..*" Comment
+
+@enduml
