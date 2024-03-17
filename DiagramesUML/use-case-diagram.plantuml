@@ -1,0 +1,21 @@
+@startuml
+
+left to right direction
+user1 --> (Check all tricks)
+user1 --> (Check the detail of a trick)
+user1 --> (Sign up)
+user1 --> (Login)
+user1 --> (Add a trick)
+user1 --> (Edit a trick)
+user1 --> (Delete a trick)
+user1 --> (Add comments)
+
+
+(Add a trick).> (Authentication):include
+(Edit a trick).> (Authentication):include
+(Delete a trick).> (Authentication):include
+(Add comments).> (Authentication):include
+(Sign up).>(Authentication):include
+(Login).>(Authentication):include
+
+@enduml

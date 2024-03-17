@@ -1,0 +1,83 @@
+@startuml
+
+actor User
+participant "Trick Controller" as TrickController
+participant "Register Controller" as RegisterController
+participant "Security Controller" as SecurityController
+participant "Trick" as TrickEntity
+participant "User" as UserEntity
+participant "Comment" as CommentEntity
+
+User -> TrickController: Check All Tricks
+activate TrickController
+TrickController --> User: List of Tricks
+deactivate TrickController
+
+User -> TrickController: Check Trick Details
+activate TrickController
+TrickController --> User: Trick Details
+deactivate TrickController
+
+User -> TrickController: Add Trick
+activate TrickController
+TrickController -> TrickEntity: Create Trick
+activate TrickEntity
+TrickEntity --> TrickController: Trick Created
+deactivate TrickEntity
+TrickController --> User: Trick Added
+deactivate TrickController
+
+User -> TrickController: Edit Trick
+activate TrickController
+TrickController -> TrickEntity: Get Trick
+activate TrickEntity
+TrickEntity --> TrickController: Trick Retrieved
+deactivate TrickEntity
+TrickController -> TrickEntity: Update Trick
+activate TrickEntity
+TrickEntity --> TrickController: Trick Updated
+deactivate TrickEntity
+TrickController --> User: Trick Edited
+deactivate TrickController
+
+User -> TrickController: Delete Trick
+activate TrickController
+TrickController -> TrickEntity: Get Trick
+activate TrickEntity
+TrickEntity --> TrickController: Trick Retrieved
+deactivate TrickEntity
+TrickController -> TrickEntity: Delete Trick
+activate TrickEntity
+TrickEntity --> TrickController: Trick Deleted
+deactivate TrickEntity
+TrickController --> User: Trick Deleted
+deactivate TrickController
+
+User -> TrickController: Add Comment
+activate TrickController
+TrickController -> CommentEntity: Create Comment
+activate CommentEntity
+CommentEntity --> TrickController: Comment Created
+deactivate CommentEntity
+TrickController --> User: Comment Added
+deactivate TrickController
+
+User -> RegisterController: Sign Up
+activate RegisterController
+RegisterController -> UserEntity: Create User
+activate UserEntity
+UserEntity --> RegisterController: User Created
+deactivate UserEntity
+RegisterController --> User: Sign Up Successful
+deactivate RegisterController
+
+User -> SecurityController: Log In
+activate SecurityController
+SecurityController -> UserEntity: Authenticate User
+activate UserEntity
+UserEntity --> SecurityController: User Authenticated
+deactivate UserEntity
+SecurityController --> User: Log In Successful
+deactivate SecurityController
+
+@enduml
