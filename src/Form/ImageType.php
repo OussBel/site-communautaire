@@ -20,13 +20,13 @@ class ImageType extends AbstractType
                 'mapped' => true,
                 'constraints' => [
                     new File([
-                        'maxSize' => '2M',
-                        'maxSizeMessage' => "L'image ne doit pas etre > 2M",
+                        'maxSize' => '3M',
+                        'maxSizeMessage' => "L'image ne doit pas etre > 3M",
                         'mimeTypes' => ['image/*'],
-                        'mimeTypesMessage' => "Veuillez ajouter un type d'image valide"
+                        'mimeTypesMessage' => "Veuillez ajouter un type d'image valide",
                     ]),
-                    new NotBlank(message: 'Veuillez ajouter une image')
-                ]
+                    new NotBlank(message: 'Veuillez ajouter une image'),
+                ],
             ])
         ;
     }

@@ -14,8 +14,7 @@ use Faker\Factory;
 
 class AppFixtures extends Fixture implements DependentFixtureInterface
 {
-
-    public function __construct( private readonly SluggerInterface $slugger)
+    public function __construct(private readonly SluggerInterface $slugger)
     {
     }
 
@@ -38,7 +37,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
 
                 $trick->setUser($user)->setGroupe($randomGroupValue);
 
-                for($j = 0; $j < 25; $j++) {
+                for ($j = 0; $j < 25; $j++) {
                     $comment = new Comment();
                     $comment->setAuthor($user);
                     $comment->setTrick($trick);

@@ -49,7 +49,7 @@ class RegisterType extends AbstractType
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'constraints' => [
-                    new NotBlank(message: "Le mot de passe est obligatoire"),
+                    new NotBlank(message: 'Le mot de passe est obligatoire'),
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Il faut au moins {{ limit }} caractères'

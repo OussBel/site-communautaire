@@ -9,7 +9,6 @@ use Symfony\Component\Mime\Address;
 
 class MailerService
 {
-
     /**
      * @param MailerInterface $mailer
      */

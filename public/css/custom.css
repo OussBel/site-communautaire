@@ -101,6 +101,7 @@ body {
     cursor: pointer;
 }
 
+
 .cursor-pointer {
     cursor: pointer !important;
 }
@@ -129,6 +130,20 @@ body {
 
 .form-width {
     width: 50%;
+}
+
+.real-input {
+ display: none;
+}
+
+.custom-input-container {
+    background-color: #eee;
+    border-radius: 3px;
+    padding: 8px ;
+}
+
+.custom-text {
+    margin-left: 15px;
 }
 
 @media (max-width: 768px) {

@@ -13,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -21,7 +20,7 @@ class TrickType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => false,
-                'empty_data' => '' ,
+                'empty_data' => '',
                 'attr' => [
                     'placeholder' => 'Nom',
                 ],
@@ -56,7 +55,7 @@ class TrickType extends AbstractType
                 'choice_label' => 'name',
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Soumettre",
+                'label' => 'Soumettre',
             ]);
     }
 

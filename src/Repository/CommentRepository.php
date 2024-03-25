@@ -22,7 +22,6 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
-
     /**
      * @param int $page
      * @param string $slug
@@ -31,16 +30,15 @@ class CommentRepository extends ServiceEntityRepository
      */
     public function pagination(int $page, string $slug, int $limit = 10): array
     {
-
         $limit = abs($limit);
 
         $result = [];
 
-        $query =  $this->createQueryBuilder('c')
+        $query = $this->createQueryBuilder('c')
             ->join('c.trick', 't')
             ->andWhere('t.slug = :slug')
             ->setParameter('slug', $slug)
-            ->setFirstResult( $page * $limit  - $limit)
+            ->setFirstResult($page * $limit - $limit)
             ->setMaxResults($limit)
             ->orderBy('c.createdAt', 'DESC');
 
@@ -48,11 +46,11 @@ class CommentRepository extends ServiceEntityRepository
 
         $data = $paginator->getQuery()->getResult();
 
-        if(empty($data)) {
+        if (empty($data)) {
             return $result;
         }
 
-        $pages = ceil($paginator->count()/ $limit);
+        $pages = ceil($paginator->count() / $limit);
 
         $result['data'] = $data;
         $result['limit'] = $limit;
@@ -60,7 +58,5 @@ class CommentRepository extends ServiceEntityRepository
         $result['pages'] = $pages;
 
         return $result;
-
     }
-
 }

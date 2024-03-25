@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 
@@ -43,10 +42,8 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
-
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Le nom de la figure est obligatoire')]
@@ -67,11 +64,11 @@ class Trick
         $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
     }
+
     public function getId(): ?int
     {
         return $this->id;
     }
-
 
     public function getSlug(): ?string
     {
@@ -132,7 +129,6 @@ class Trick
         return $this->groupe;
     }
 
-
     public function setGroupe(?Groupe $groupe): static
     {
         $this->groupe = $groupe;
@@ -151,7 +147,6 @@ class Trick
 
         return $this;
     }
-
 
     /**
      * @return Collection<int, Comment>
@@ -268,5 +263,4 @@ class Trick
 
         return $this;
     }
-
 }

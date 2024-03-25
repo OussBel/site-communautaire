@@ -34,6 +34,4 @@ class ImagesRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-
 }

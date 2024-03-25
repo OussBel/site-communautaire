@@ -13,14 +13,12 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class TrickService
 {
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly SluggerInterface       $slugger,
-        private readonly FileUploader           $fileUploader,
-        private readonly Kernel                $kernel
+        private readonly SluggerInterface $slugger,
+        private readonly FileUploader $fileUploader,
+        private readonly Kernel $kernel
     ) {
-
     }
 
     public function addImage(FormInterface $form, Trick $trick, UserInterface $currentUser): void

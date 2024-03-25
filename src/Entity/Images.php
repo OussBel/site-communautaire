@@ -52,7 +52,6 @@ class Images
         return $this;
     }
 
-
     /**
      * @return UploadedFile|null
      */

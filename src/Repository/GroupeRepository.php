@@ -20,5 +20,4 @@ class GroupeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Groupe::class);
     }
-
 }

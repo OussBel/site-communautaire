@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-
 class HomeController extends AbstractController
 {
     /**
@@ -27,11 +26,11 @@ class HomeController extends AbstractController
      * @param SluggerInterface $slugger
      * @param TrickService $trickService
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager,
-                                private readonly SluggerInterface       $slugger,
-                                private readonly TrickService           $trickService
-    )
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SluggerInterface $slugger,
+        private readonly TrickService $trickService
+    ) {
     }
 
     /**
@@ -45,7 +44,6 @@ class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', ['tricks' => $tricks]);
     }
-
 
     /**
      * @param Trick $trick
@@ -76,7 +74,6 @@ class HomeController extends AbstractController
 
         $comments = $commentRepository->pagination($page, $trick->getSlug());
 
-
         return $this->render('home/show.html.twig', [
             'trick' => $trick,
             'form' => $form,
@@ -85,7 +82,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-
     /**
      * @param Request $request
      * @return Response
@@ -93,7 +89,6 @@ class HomeController extends AbstractController
     #[Route('/compte/ajouter-une-figure', name: 'app_trick_add', methods: ['GET', 'POST'])]
     public function add(Request $request): Response
     {
-
         $trick = new Trick();
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
@@ -112,7 +107,6 @@ class HomeController extends AbstractController
         return $this->render('home/form.html.twig', ['form' => $form]);
     }
 
-
     /**
      * @param Trick $trick
      * @param Request $request
@@ -122,7 +116,9 @@ class HomeController extends AbstractController
     #[Route('/compte/modifier-une-figure/{id<\d+>}', name: 'app_trick_edit', methods: ['GET', 'POST'])]
     public function edit(Trick $trick, Request $request, ImagesRepository $imagesRepository): Response
     {
-        if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
+        if ($this->getUser() !== $trick->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
 
         $uploadedImages = $imagesRepository->imagesByTrickId($trick);
 
@@ -144,12 +140,13 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('home/form.html.twig',
+        return $this->render(
+            'home/form.html.twig',
             [
                 'form' => $form,
                 'uploadedImages' => $uploadedImages
-            ]);
-
+            ]
+        );
     }
 
     /**
@@ -159,7 +156,9 @@ class HomeController extends AbstractController
     #[Route('/compte/supprimer-une-figure/{id<\d+>}', name: 'app_trick_delete', methods: ['GET', 'DELETE'])]
     public function delete(Trick $trick): Response
     {
-        if ($this->getUser() !== $trick->getUser()) return $this->redirectToRoute('app_home');
+        if ($this->getUser() !== $trick->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
 
         $images = $trick->getImages();
 
@@ -177,7 +176,6 @@ class HomeController extends AbstractController
     #[Route('/compte/supprimer-une-image/{id<\d+>}', name: 'app_image_delete', methods: ['GET', 'DELETE'])]
     public function deleteImage(Images $image): Response
     {
-
         $trick = $image->getTrick();
         $trickId = $trick->getId();
 
@@ -189,9 +187,4 @@ class HomeController extends AbstractController
         $this->addFlash('success', message: "L'image a été supprimée avec succès");
         return $this->redirectToRoute('app_trick_edit', ['id' => $trickId]);
     }
-
 }
-
-
-
-
