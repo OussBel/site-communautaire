@@ -20,6 +20,4 @@ class VideosRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Videos::class);
     }
-
-
 }

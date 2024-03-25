@@ -24,7 +24,5 @@ class UserConfirmation implements UserCheckerInterface
              merci de confirmer votre adresse émail avant le {$user->getTokenRegistrationLifeTime()
              ->format('d/m/y à H\hi')} ");
         }
-
     }
-
 }

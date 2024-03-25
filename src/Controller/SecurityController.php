@@ -22,7 +22,6 @@ class SecurityController extends AbstractController
     #[Route(path: '/connexion', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
@@ -42,22 +41,22 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-
     /**
      * @throws TransportExceptionInterface
      */
     #[Route(path: '/mot-de-passe-oublie', name: 'app_forgotten_password')]
-    public function forgottenPassword(Request                 $request, UserRepository $userRepository,
-                                      TokenGeneratorInterface $tokenGenerator, EntityManagerInterface $entityManager,
-                                      MailerService           $mailerService
-    ): Response
-    {
+    public function forgottenPassword(
+        Request $request,
+        UserRepository $userRepository,
+        TokenGeneratorInterface $tokenGenerator,
+        EntityManagerInterface $entityManager,
+        MailerService $mailerService
+    ): Response {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user = $userRepository->findOneByEmail($form->get('email')->getData());
 
             if ($user) {
@@ -66,13 +65,20 @@ class SecurityController extends AbstractController
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                $url = $this->generateUrl('app_reset_pass', ['token' => $token],
-                    UrlGeneratorInterface::ABSOLUTE_URL);
+                $url = $this->generateUrl(
+                    'app_reset_pass',
+                    ['token' => $token],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
 
                 $context = compact('url', 'user');
 
-                $mailerService->send($user->getEmail(), 'Réinitialisation du mot de passe',
-                    'password_reset.html.twig', $context);
+                $mailerService->send(
+                    $user->getEmail(),
+                    'Réinitialisation du mot de passe',
+                    'password_reset.html.twig',
+                    $context
+                );
 
                 $this->addFlash('success', 'Email envoyé avec succès');
                 return $this->redirectToRoute('app_login');
@@ -83,17 +89,17 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-
         return $this->render('security/reset_password_request.html.twig', ['form' => $form]);
     }
 
     #[Route(path: '/mot-de-passe-oublie/{token}', name: 'app_reset_pass')]
-    public function resetPass(UserRepository              $userRepository, EntityManagerInterface $entityManager,
-                              string                      $token,
-                              UserPasswordHasherInterface $passwordHasher,
-                              Request                     $request
-    ): Response
-    {
+    public function resetPass(
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
+        string $token,
+        UserPasswordHasherInterface $passwordHasher,
+        Request $request
+    ): Response {
         $user = $userRepository->findOneByResetToken($token);
 
         if ($user) {
@@ -101,7 +107,7 @@ class SecurityController extends AbstractController
 
             $form->handleRequest($request);
 
-            if($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $user->setResetToken('');
                 $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getData()));
                 $entityManager->persist($user);
@@ -118,5 +124,4 @@ class SecurityController extends AbstractController
         $this->addFlash('danger', 'Jeton invalide');
         return $this->redirectToRoute('app_login');
     }
-
 }

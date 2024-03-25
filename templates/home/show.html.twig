@@ -45,7 +45,14 @@
         {% if app.user %}
             <div class="mt-5 mb-5 container form-width">
                 <h4 class="text-center mb-3">Laisser un commentaire</h4>
-                {{ form(form) }}
+
+                {{ form_start(form) }}
+                {{ form_row(form.content) }}
+                <div class="text-center">
+                    <button class="btn btn-primary">Ajouter un commentaire</button>
+                </div>
+                {{ form_end(form) }}
+
             </div>
         {% endif %}
 

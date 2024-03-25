@@ -5,17 +5,18 @@ namespace App\DataFixtures;
 use App\Entity\Groupe;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class GroupeFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
+        $groupList = ['Grabs', 'Rotations', 'Flips',
+            'Slides', 'Butters', 'Bonks', 'Spins désaxés',
+            'Slopestyle', 'handplants', 'Combos jibbing'];
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $group = new Groupe();
-            $group->setName($faker->name());
+            $group->setName($groupList[$i]);
             $manager->persist($group);
         }
 

@@ -18,20 +18,17 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class RegisterController extends AbstractController
 {
-
     #[Route('/inscription', name: 'app_register')]
-    public function index(Request                     $request,
-                          EntityManagerInterface      $entityManager,
-                          UserPasswordHasherInterface $passwordHasher,
-                          TokenGeneratorInterface     $tokenGeneratorInterface,
-                          MailerService               $mailerService,
-                          FileUploader                $fileUploader,
-                          Security $security
-    ): Response
-    {
-
-
-        if($this->getUser()) {
+    public function index(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        TokenGeneratorInterface $tokenGeneratorInterface,
+        MailerService $mailerService,
+        FileUploader $fileUploader,
+        Security $security
+    ): Response {
+        if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
 
@@ -50,18 +47,18 @@ class RegisterController extends AbstractController
 
             $image = $form->get('image')->getData();
 
-
-            if($image) {
+            if ($image) {
                 $fileName = $fileUploader->upload($image);
                 $user->setImage($fileName);
             }
 
-
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $mailerService->send($user->getEmail(), "Confirmation du compte d'utilisateur",
-                "registration_confirmation.html.twig",
+            $mailerService->send(
+                $user->getEmail(),
+                "Confirmation du compte d'utilisateur",
+                'registration_confirmation.html.twig',
                 [
                     'user' => $user,
                     'token' => $tokenRegistration,
@@ -71,13 +68,11 @@ class RegisterController extends AbstractController
 
             $this->addFlash('success', 'Votre compte a été crée,
              merci de confirmer votre email');
-
         }
 
         return $this->render('register/index.html.twig', [
             'form' => $form,
         ]);
-
     }
 
     #[Route('/verify/{token}/{id<\d+>}', name: 'account_verify', methods: ['GET'])]
@@ -103,5 +98,4 @@ class RegisterController extends AbstractController
 
         return $this->redirectToRoute('app_login');
     }
-
 }

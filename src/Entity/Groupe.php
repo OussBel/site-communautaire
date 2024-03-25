@@ -26,8 +26,6 @@ class Groupe
         $this->tricks = new ArrayCollection();
     }
 
-
-
     public function getId(): ?int
     {
         return $this->id;
@@ -74,7 +72,4 @@ class Groupe
 
         return $this;
     }
-
-
-
 }
