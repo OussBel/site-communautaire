@@ -8,8 +8,6 @@
         {% include '_partials/_flash.html.twig' %}
 
         <h2 class="mb-5 text-center  font-weight-light">Page d'inscription</h2>
-        {#   {{ form(form) }} #}
-
         {{ form_start(form) }}
 
         <div class="form-group">
@@ -32,29 +30,11 @@
 
         <div class="form-group">
             {{ form_label(form.image, "Image") }}
-            {{ form_widget(form.image, {'attr': {'class': 'real-input'}}) }}
+            {{ form_widget(form.image) }}
             {{ form_errors(form.image) }}
-            <div class="custom-input-container">
-                <button class="btn btn-primary custom-btn" type="button">Télécharger une image</button>
-                <span class="custom-text">Aucun fichier sélectionné</span>
-            </div>
         </div>
         {{ form_end(form) }}
     </div>
 
-    <script>
-        const realInputFile = document.querySelector('.real-input')
-        const customBtn = document.querySelector('.custom-btn')
-        const customText = document.querySelector('.custom-text')
-
-        customBtn.addEventListener('click', () => realInputFile.click())
-        realInputFile.addEventListener('change', () => {
-            if (realInputFile.value) {
-                customText.innerHTML = realInputFile.value.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1]
-            } else {
-                customText.innerHTML = 'Aucun fichier sélectionné'
-            }
-        })
-    </script>
 
 {% endblock %}

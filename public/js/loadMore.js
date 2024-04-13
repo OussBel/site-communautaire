@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (i >= cards.length) {
                 loadMoreButton.style.display = 'none'; // Hide the button if there are no more cards
             } else {
-                loadMoreButton.style.display = ''; // Show the button if there are more cards
+                loadMoreButton.style.display = 'block'; // Show the button if there are more cards
             }
 
         });
